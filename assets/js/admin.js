@@ -1,126 +1,201 @@
 /**
- * BOLIKRO CHEZ WOLF — Console Administrateur Général (Direction & Vue Globale)
- * Fichier dédié : admin.html / admin.js
+ * BOLIKRO CHEZ WOLF — Console Administrateur Général (Design Moderne Type Lead Enterprise)
+ * Modèle inspiré : Sidebar gauche sombre avec icônes, Topbar complète,
+ * KPI Cards dégradées vives (Bleu, Orange, Violet, Indigo), Graphiques Vectoriels et Gestion Intégrale.
  */
 
 const A = document.getElementById('app');
-let tab = 's'; // 's' (statistiques), 'o' (commandes), 'm' (carte)
+let currentTab = 'dashboard'; // 'dashboard', 'orders', 'menu', 'customers'
 
 const G = () => store.get('bcw_menu', DEF);
 const O = () => store.get('bcw_orders', []);
-const B = () => document.getElementById('b');
 
-const sel = (l, v, k, i) => `
-  <select data-k="${k}" data-i="${i}" style="min-height:38px; font-weight:600;">
-    ${l.map(s => `<option ${s == v ? 'selected' : ''}>${s}</option>`).join('')}
-  </select>
-`;
+function getNowFormatted() {
+  const d = new Date();
+  return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
 
 function login() {
   A.innerHTML = `
-    <div class="oc" style="max-width:420px; margin:12vh auto; padding:32px; border:2px solid var(--border); box-shadow:var(--shadow-md);">
-      <div style="text-align:center; margin-bottom:20px;">
-        <img src="assets/images/logo.png" style="width:72px; height:72px; border-radius:50%; margin:auto; background:#FFF; padding:2px; border:2px solid var(--gold);" onerror="this.onerror=null;this.src='Logo.png'">
-        <h1 style="font-size:24px; margin-top:12px; font-family:var(--f1);">Administration Générale</h1>
-        <p style="font-size:13.5px; color:var(--mu); margin-top:4px;">Bolikro Chez Wolf — Direction & Statistiques</p>
-      </div>
+    <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:#1e1e2d; padding:20px;">
+      <div style="width:100%; max-width:420px; background:#fff; border-radius:16px; padding:36px; box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+        <div style="text-align:center; margin-bottom:28px;">
+          <img src="assets/images/logo.png" style="width:76px; height:76px; border-radius:16px; object-fit:cover; margin-bottom:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.onerror=null;this.src='Logo.png'">
+          <h2 style="font-size:22px; font-weight:800; color:#181c32; margin:0 0 6px;">Bolikro Chez Wolf</h2>
+          <span style="font-size:12.5px; color:#7e8299; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Enterprise Admin Console</span>
+        </div>
 
-      <div style="background:var(--iv); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:18px; font-size:13px; text-align:center;">
-        Mot de passe administrateur : <b>admin2026</b>
-      </div>
+        <div style="background:#f4f6fa; border:1px solid #ebedf2; border-radius:10px; padding:12px 16px; margin-bottom:20px; font-size:13px; color:#3f4254; display:flex; justify-content:space-between; align-items:center;">
+          <span>Mot de passe requis :</span>
+          <code style="background:#fff; padding:3px 8px; border-radius:6px; font-weight:700; color:#e86f1c; border:1px solid #e1e3ea;">admin2026</code>
+        </div>
 
-      <label for="pw" style="font-weight:700; margin-bottom:6px; display:block;">Mot de passe</label>
-      <input id="pw" type="password" placeholder="Entrez le mot de passe administrateur" style="width:100%; min-height:42px; margin-bottom:12px;">
-      
-      <p class="err" id="e" style="margin:4px 0 10px;"></p>
-      <button class="btn dk" id="ok" style="width:100%; min-height:46px; font-size:15px; font-weight:700; justify-content:center;">Connexion Administrateur</button>
+        <label style="font-size:12.5px; font-weight:700; color:#3f4254; margin-bottom:6px; display:block;">Mot de Passe Administrateur</label>
+        <input id="admin_pwd" type="password" placeholder="Entrez votre mot de passe" style="width:100%; min-height:46px; border-radius:10px; border:1px solid #e1e3ea; padding:0 14px; font-size:14px; margin-bottom:8px; outline:none; transition:border 0.2s;">
+        
+        <p id="auth_err" style="color:#f5222d; font-size:13px; font-weight:600; margin:0 0 14px; min-height:20px;"></p>
+        
+        <button id="btn_login" style="width:100%; min-height:48px; background:linear-gradient(135deg, #e86f1c 0%, #c7560a 100%); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 6px 16px rgba(232,111,28,0.35); transition:transform 0.15s;">
+          Accéder au Tableau de Bord
+        </button>
 
-      <div style="display:flex; justify-content:space-between; margin-top:20px; font-size:13px;">
-        <a href="index.html" style="color:var(--mu); text-decoration:none;">← Site public</a>
-        <a href="superviseur.html" style="color:#2e7d32; text-decoration:none; font-weight:700;">Accès Superviseur Cuisine →</a>
+        <div style="display:flex; justify-content:space-between; margin-top:24px; font-size:13px;">
+          <a href="index.html" style="color:#7e8299; text-decoration:none; font-weight:600;">← Site Public</a>
+          <a href="superviseur.html" style="color:#2e7d32; text-decoration:none; font-weight:700;">Espace Superviseur →</a>
+        </div>
       </div>
     </div>
   `;
 
-  document.getElementById('ok').onclick = () => {
-    const pwd = document.getElementById('pw').value.trim();
+  document.getElementById('btn_login').onclick = () => {
+    const pwd = document.getElementById('admin_pwd').value.trim();
     if (pwd === 'admin2026' || pwd === 'admin') {
       sessionStorage.setItem('adm_auth', '1');
       view();
     } else {
-      document.getElementById('e').textContent = 'Mot de passe administrateur incorrect.';
+      document.getElementById('auth_err').textContent = 'Mot de passe incorrect. Utilisez : admin2026';
     }
   };
 
-  document.getElementById('pw').addEventListener('keypress', e => {
-    if (e.key === 'Enter') document.getElementById('ok').click();
+  document.getElementById('admin_pwd').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('btn_login').click();
   });
 }
 
 function view() {
   if (!sessionStorage.getItem('adm_auth')) return login();
 
-  A.innerHTML = `
-    <div class="row" style="margin-bottom:20px; flex-wrap:wrap; gap:16px;">
-      <div style="display:flex; align-items:center; gap:14px;">
-        <img src="assets/images/logo.png" style="height:50px; width:50px; border-radius:50%; background:#FFF; border:2px solid var(--gold);" onerror="this.onerror=null;this.src='Logo.png'">
-        <div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <h1 style="font-size:24px; margin:0; font-family:var(--f1);">Administration Restaurant</h1>
-            <span class="badge-role admin">👑 Administrateur Général</span>
-          </div>
-          <span style="font-size:13px; color:var(--mu);">Vue globale sur les statistiques, ventes, commandes et la carte</span>
-        </div>
-      </div>
-      <div style="display:flex; gap:10px; align-items:center; margin-left:auto;">
-        <a href="index.html" class="btn ln" style="color:var(--ink); font-size:13px; padding:7px 12px;">← Site public</a>
-        <a href="superviseur.html" class="btn ln" style="color:#2e7d32; font-size:13px; padding:7px 12px; font-weight:700;">Espace Superviseur</a>
-        <button class="btn dk" onclick="sessionStorage.removeItem('adm_auth'); login();" style="padding:7px 14px; min-height:36px; font-size:13px;">Déconnexion</button>
-      </div>
-    </div>
-
-    <!-- Onglets Administrateur -->
-    <div class="at" style="flex-wrap:wrap;">
-      <button data-t="s" aria-pressed="${tab === 's'}" style="display:inline-flex; align-items:center; gap:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
-        <span>Tableau de Bord & Statistiques</span>
-      </button>
-
-      <button data-t="o" aria-pressed="${tab === 'o'}" style="display:inline-flex; align-items:center; gap:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 18l4-4h-3V9h-2v5H8z"/></svg>
-        <span>Toutes les Commandes (${O().length})</span>
-      </button>
-
-      <button data-t="m" aria-pressed="${tab === 'm'}" style="display:inline-flex; align-items:center; gap:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
-        <span>Gestion de la Carte (${G().length} plats)</span>
-      </button>
-    </div>
-
-    <div id="b"></div>
-  `;
-
-  if (tab === 's') stats();
-  else if (tab === 'm') dishes();
-  else orders();
-}
-
-function stats() {
   const o = O();
   const m = G();
-  
-  const totalCommandes = o.length;
+  const totalOrders = o.length;
   const acceptees = o.filter(x => x.statut !== 'Annulée');
-  const enAttente = o.filter(x => x.statut === 'En attente').length;
-  const preparees = o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut)).length;
-  const terminees = o.filter(x => x.statut === 'Terminée').length;
-  const annulees = o.filter(x => x.statut === 'Annulée').length;
+  const totalRevenue = acceptees.reduce((acc, cur) => acc + (cur.total || 0), 0);
+  const pendingOrders = o.filter(x => x.statut === 'En attente').length;
+  const inProgress = o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut)).length;
 
+  A.innerHTML = `
+    <div class="dash-layout">
+      <!-- SIDEBAR GAUCHE SOMBRE -->
+      <aside class="dash-sidebar">
+        <div class="dash-brand">
+          <img src="assets/images/logo.png" alt="Logo" onerror="this.onerror=null;this.src='Logo.png'">
+          <div class="dash-brand-title">BOLIKRO ADMIN</div>
+        </div>
+
+        <div class="dash-user-badge">
+          <div class="admin-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Administrateur
+          </div>
+          <div class="live-clock">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${getNowFormatted()}
+          </div>
+        </div>
+
+        <nav class="dash-nav">
+          <div class="dash-nav-header">Navigation Principale</div>
+          
+          <button class="dash-nav-item ${currentTab === 'dashboard' ? 'active' : ''}" data-tab="dashboard">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            <span>Tableau de Bord</span>
+          </button>
+
+          <button class="dash-nav-item ${currentTab === 'orders' ? 'active' : ''}" data-tab="orders">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 18l4-4h-3V9h-2v5H8z"/></svg>
+            <span>Toutes les Commandes</span>
+            <span class="dash-nav-badge">${totalOrders}</span>
+          </button>
+
+          <button class="dash-nav-item ${currentTab === 'menu' ? 'active' : ''}" data-tab="menu">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
+            <span>Carte & Prix des Plats</span>
+            <span class="dash-nav-badge">${m.length}</span>
+          </button>
+
+          <div class="dash-nav-header" style="margin-top:16px;">Passerelles & Équipe</div>
+
+          <a href="superviseur.html" class="dash-nav-item" style="color:#52c41a;">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <span>Espace Superviseur</span>
+          </a>
+
+          <a href="index.html" class="dash-nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Voir le Site Public</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- ZONE CENTRALE & TOPBAR -->
+      <div class="dash-main">
+        <!-- TOPBAR EN-TÊTE -->
+        <header class="dash-topbar">
+          <div class="dash-topbar-left">
+            <div>
+              <h1 class="dash-page-title">${currentTab === 'dashboard' ? 'Dashboard' : currentTab === 'orders' ? 'Gestion des Commandes' : 'Gestion de la Carte'}</h1>
+              <div class="dash-breadcrumbs">Bolikro Chez Wolf / Administration / ${currentTab.toUpperCase()}</div>
+            </div>
+          </div>
+
+          <div class="dash-topbar-right">
+            <!-- Notifications avec compteur -->
+            <div class="topbar-icon-btn" title="Commandes à valider" onclick="currentTab='orders'; view();">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              ${pendingOrders > 0 ? `<span class="badge-dot">${pendingOrders}</span>` : ''}
+            </div>
+
+            <!-- Bouton Déconnexion -->
+            <button class="topbar-icon-btn" title="Se déconnecter" onclick="sessionStorage.removeItem('adm_auth'); login();">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5222d" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </button>
+
+            <!-- Profil utilisateur avec badge -->
+            <div class="topbar-profile">
+              <img src="assets/images/logo.png" alt="Admin Avatar" onerror="this.onerror=null;this.src='Logo.png'">
+              <div class="topbar-profile-info">
+                <span class="topbar-profile-name">Chef Wolf</span>
+                <span class="topbar-profile-role">Directeur Général</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CORPS DU DASHBOARD -->
+        <main class="dash-content" id="dash_body">
+        </main>
+      </div>
+    </div>
+  `;
+
+  renderTabContent();
+}
+
+function renderTabContent() {
+  const container = document.getElementById('dash_body');
+  if (!container) return;
+
+  if (currentTab === 'dashboard') {
+    renderDashboardOverview(container);
+  } else if (currentTab === 'orders') {
+    renderOrdersManagement(container);
+  } else if (currentTab === 'menu') {
+    renderMenuManagement(container);
+  }
+}
+
+function renderDashboardOverview(container) {
+  const o = O();
+  const m = G();
+  const totalOrders = o.length;
+  const acceptees = o.filter(x => x.statut !== 'Annulée');
   const caTotal = acceptees.reduce((sum, x) => sum + (x.total || 0), 0);
-  const nbLivraison = o.filter(x => x.mode === 'livraison').length;
-  const nbSurPlace = o.filter(x => x.mode !== 'livraison').length;
+  const pendingOrders = o.filter(x => x.statut === 'En attente').length;
+  const activeOrders = o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut)).length;
+  const completedOrders = o.filter(x => x.statut === 'Terminée').length;
+  const cancelledOrders = o.filter(x => x.statut === 'Annulée').length;
 
-  // Calcul du classement des ventes
+  // Top plats vendus
   const dishSales = {};
   o.forEach(order => {
     if (order.statut !== 'Annulée' && order.items) {
@@ -132,242 +207,381 @@ function stats() {
 
   const topDishes = Object.entries(dishSales)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 6);
+    .slice(0, 5);
 
-  B().innerHTML = `
-    <!-- Cartes KPI statistiques -->
-    <div class="stats-grid">
-      <div class="stat-card green">
-        <div class="lbl">Chiffre d'Affaires Réalisé</div>
-        <div class="val">${FCFA(caTotal)}</div>
-        <small style="color:var(--mu);">${acceptees.length} commande(s) confirmée(s)</small>
+  container.innerHTML = `
+    <!-- 4 CARTES KPI DÉGRADÉES EXACTEMENT COMME LE MODÈLE DU CLIENT -->
+    <div class="dash-kpi-grid">
+      <!-- BLEU : TOTAL COMMANDES CLIENTS -->
+      <div class="dash-kpi-card blue">
+        <div class="dash-kpi-info">
+          <div class="dash-kpi-label">TOTAL COMMANDES</div>
+          <div class="dash-kpi-value">${totalOrders}</div>
+          <div class="dash-kpi-sub">${acceptees.length} validée(s) • ${cancelledOrders} rejetée(s)</div>
+        </div>
+        <div class="dash-kpi-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </div>
       </div>
 
-      <div class="stat-card blue">
-        <div class="lbl">Commandes Reçues</div>
-        <div class="val">${totalCommandes}</div>
-        <small style="color:var(--mu);">${nbLivraison} livraisons • ${nbSurPlace} retraits</small>
+      <!-- ORANGE : CHIFFRE D'AFFAIRES GLOBAL -->
+      <div class="dash-kpi-card orange">
+        <div class="dash-kpi-info">
+          <div class="dash-kpi-label">CHIFFRE D'AFFAIRES TOTAL</div>
+          <div class="dash-kpi-value">${FCFA(caTotal)}</div>
+          <div class="dash-kpi-sub">Encaissement cumulé du restaurant</div>
+        </div>
+        <div class="dash-kpi-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        </div>
       </div>
 
-      <div class="stat-card gold">
-        <div class="lbl">En Cours de Traitement</div>
-        <div class="val">${enAttente + preparees}</div>
-        <small style="color:#b74b00; font-weight:600;">${enAttente} à valider • ${preparees} en préparation</small>
+      <!-- VIOLET : COMMANDES EN ATTENTE DE VALIDATION -->
+      <div class="dash-kpi-card purple">
+        <div class="dash-kpi-info">
+          <div class="dash-kpi-label">EN ATTENTE DE DÉCISION</div>
+          <div class="dash-kpi-value">${pendingOrders}</div>
+          <div class="dash-kpi-sub">Commandes nécessitant validation</div>
+        </div>
+        <div class="dash-kpi-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>
+        </div>
       </div>
 
-      <div class="stat-card red">
-        <div class="lbl">Commandes Refusées / Annulées</div>
-        <div class="val">${annulees}</div>
-        <small style="color:var(--mu);">${terminees} livrées/terminées</small>
+      <!-- INDIGO : COMMANDES EN CUISINE / LIVRAISON -->
+      <div class="dash-kpi-card indigo">
+        <div class="dash-kpi-info">
+          <div class="dash-kpi-label">EN COURS DE TRAITEMENT</div>
+          <div class="dash-kpi-value">${activeOrders}</div>
+          <div class="dash-kpi-sub">${completedOrders} terminée(s) avec succès</div>
+        </div>
+        <div class="dash-kpi-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        </div>
       </div>
     </div>
 
-    <!-- Répartition et classements -->
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px; margin-bottom:24px;">
-      <div class="oc">
-        <h3 style="margin-bottom:14px;">🔥 Top Plats les Plus Vendus</h3>
-        ${topDishes.length ? `
-          <ul style="list-style:none; padding:0; margin:0;">
-            ${topDishes.map(([nom, quantite], idx) => `
-              <li style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f0e6d9;">
-                <span><b>#${idx + 1}</b> ${esc(nom)}</span>
-                <span class="pill" style="font-weight:700;">${quantite} portion(s) vendue(s)</span>
-              </li>
-            `).join('')}
-          </ul>
-        ` : '<p style="color:var(--mu); font-size:14px;">Aucune vente enregistrée pour le moment.</p>'}
+    <!-- MINI METRIC CARDS STYLE EXACT (Total Orders, Credits, Debits) -->
+    <div class="dash-metrics-grid">
+      <div class="dash-metric-card">
+        <div class="dash-metric-header">
+          <span class="dash-metric-title">Performance Ventes</span>
+        </div>
+        <div class="dash-metric-body">
+          <div>
+            <div class="dash-metric-number">${FCFA(caTotal)}</div>
+            <div class="dash-metric-trend up">↑ 100% Transactions locales</div>
+          </div>
+          <svg class="dash-sparkline-svg" viewBox="0 0 100 40">
+            <path d="M0,35 Q20,30 40,25 T80,10 T100,5" fill="none" stroke="#1890ff" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="dash-metric-details">
+          <span>Commandes Confirmées: <b style="color:#52c41a;">${FCFA(caTotal)}</b></span>
+          <span>En Attente: <b style="color:#fa8c16;">${pendingOrders}</b></span>
+        </div>
       </div>
 
-      <div class="oc">
-        <h3 style="margin-bottom:14px;">📊 Métriques de Performance</h3>
-        <div style="display:flex; flex-direction:column; gap:10px; font-size:14px;">
-          <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid #f0e6d9;">
-            <span>Plats inscrits au menu :</span>
-            <b>${m.length} plats</b>
-          </div>
-          <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid #f0e6d9;">
-            <span>Plats actifs en stock :</span>
-            <b style="color:#2e7d32;">${m.filter(x => x.a).length} plats</b>
-          </div>
-          <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid #f0e6d9;">
-            <span>Plats en rupture :</span>
-            <b style="color:#c62828;">${m.filter(x => !x.a).length} plats</b>
-          </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span>Taux de conversion / validation :</span>
-            <b>${totalCommandes > 0 ? Math.round(((totalCommandes - annulees) / totalCommandes) * 100) : 100}%</b>
-          </div>
+      <div class="dash-metric-card">
+        <div class="dash-metric-header">
+          <span class="dash-metric-title">État de la Carte des Plats</span>
         </div>
+        <div class="dash-metric-body">
+          <div>
+            <div class="dash-metric-number">${m.length} Plats</div>
+            <div class="dash-metric-trend up">Disponibles : ${m.filter(x => x.a).length}</div>
+          </div>
+          <svg class="dash-sparkline-svg" viewBox="0 0 100 40">
+            <path d="M0,30 Q25,10 50,20 T75,5 T100,2" fill="none" stroke="#52c41a" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="dash-metric-details">
+          <span>En rupture : <b style="color:#f5222d;">${m.filter(x => !x.a).length}</b></span>
+          <span>Catégories : <b>${CATS.length}</b></span>
+        </div>
+      </div>
+
+      <div class="dash-metric-card">
+        <div class="dash-metric-header">
+          <span class="dash-metric-title">Modes de Livraison</span>
+        </div>
+        <div class="dash-metric-body">
+          <div>
+            <div class="dash-metric-number">${o.filter(x => x.mode === 'livraison').length} Livraisons</div>
+            <div class="dash-metric-trend" style="color:#1890ff;">${o.filter(x => x.mode !== 'livraison').length} Retraits au restaurant</div>
+          </div>
+          <svg class="dash-sparkline-svg" viewBox="0 0 100 40">
+            <path d="M0,25 Q30,35 60,15 T100,8" fill="none" stroke="#722ed1" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="dash-metric-details">
+          <span>Taux Réussite : <b style="color:#52c41a;">${totalOrders > 0 ? Math.round(((totalOrders - cancelledOrders)/totalOrders)*100) : 100}%</b></span>
+          <span>Ville : <b>Yamoussoukro</b></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAPHIQUE DES VENTES & TOP 5 (JOININGS & SALES CHART DU MODÈLE) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:20px;">
+      <!-- Graphique d'activité -->
+      <div class="dash-panel">
+        <div class="dash-panel-header">
+          <h3 class="dash-panel-title">Graphique d'Activité & Commandes (Ventes)</h3>
+          <span style="font-size:12px; color:#52c41a; font-weight:700;">● Ventes confirmées</span>
+        </div>
+        <div class="dash-chart-container">
+          <svg viewBox="0 0 600 200" style="width:100%; height:100%;">
+            <!-- Lignes de grille -->
+            <line x1="0" y1="40" x2="600" y2="40" stroke="#f0f2f5" stroke-dasharray="4"/>
+            <line x1="0" y1="90" x2="600" y2="90" stroke="#f0f2f5" stroke-dasharray="4"/>
+            <line x1="0" y1="140" x2="600" y2="140" stroke="#f0f2f5" stroke-dasharray="4"/>
+            <line x1="0" y1="190" x2="600" y2="190" stroke="#e1e3ea"/>
+
+            <!-- Aire dégradée violette comme le graphique du modèle -->
+            <defs>
+              <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#9254de" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#9254de" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <polygon points="0,190 80,180 160,150 240,60 320,160 400,120 480,90 600,140 600,190" fill="url(#purpleGrad)" />
+            <polyline points="0,190 80,180 160,150 240,60 320,160 400,120 480,90 600,140" fill="none" stroke="#722ed1" stroke-width="3" />
+
+            <!-- Points d'inflexion -->
+            <circle cx="240" cy="60" r="5" fill="#722ed1" stroke="#fff" stroke-width="2"/>
+            <circle cx="480" cy="90" r="5" fill="#722ed1" stroke="#fff" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Top 5 des mets les plus demandés -->
+      <div class="dash-panel">
+        <div class="dash-panel-header">
+          <h3 class="dash-panel-title">🔥 Plats les Plus Commandés</h3>
+          <button class="btn ln" style="font-size:12px; padding:4px 10px;" onclick="currentTab='menu'; view();">Voir la carte</button>
+        </div>
+        ${topDishes.length ? `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            ${topDishes.map(([plat, qte], idx) => `
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#fbfcfe; border-radius:8px; border:1px solid #ebedf2;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-weight:800; color:#e86f1c; font-size:14px;">#${idx + 1}</span>
+                  <span style="font-weight:600; font-size:13.5px; color:#181c32;">${esc(plat)}</span>
+                </div>
+                <span class="badge-status success">${qte} portion(s) vendue(s)</span>
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <p style="color:#7e8299; font-size:13.5px; text-align:center; padding:30px 0;">Aucune commande finalisée pour le moment.</p>
+        `}
       </div>
     </div>
   `;
 }
 
-function orders() {
+function renderOrdersManagement(container) {
   const o = O();
 
-  B().innerHTML = o.length ? o.map((x, i) => {
-    const isEnAttente = x.statut === 'En attente';
-    const isAnnulee = x.statut === 'Annulée';
-    const isConfirmee = ['Confirmée', 'En préparation', 'Prête', 'En livraison', 'Terminée'].includes(x.statut);
-
-    return `
-      <div class="oc" style="border-left: 5px solid ${isAnnulee ? '#c62828' : isConfirmee ? '#2e7d32' : 'var(--or)'};">
-        <div class="row" style="margin-bottom:10px;">
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <h3 style="margin:0;">
-              <span style="color:var(--or); font-weight:800;">${esc(x.num)}</span> · ${esc(x.nom)}
-            </h3>
-            ${isEnAttente ? '<span style="background:#fff3e0; color:#e65100; font-size:12px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #ffe0b2;">À VALIDER</span>' : ''}
-            ${isAnnulee ? '<span style="background:#ffebee; color:#c62828; font-size:12px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #ffcdd2;">REFUSÉE / ANNULÉE</span>' : ''}
-            ${x.statut === 'Confirmée' ? '<span style="background:#e8f5e9; color:#2e7d32; font-size:12px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #c8e6c9;">CONFIRMÉE</span>' : ''}
-          </div>
-          <b style="font-size:20px; color:var(--ink); font-family:var(--f1);">${FCFA(x.total)}</b>
+  container.innerHTML = `
+    <div class="dash-panel">
+      <div class="dash-panel-header">
+        <div>
+          <h3 class="dash-panel-title">Gestion Globale des Commandes</h3>
+          <span style="font-size:12.5px; color:#7e8299;">Supervision directe, acceptation, refus et changement de statut</span>
         </div>
-
-        <small style="color:var(--mu); display:flex; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:12px; font-size:13.5px;">
-          <span style="display:inline-flex; align-items:center; gap:5px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-            ${new Date(x.date).toLocaleString('fr-FR')}
-          </span>
-          <span style="display:inline-flex; align-items:center; gap:5px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="var(--or)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-            <a href="tel:${esc(x.tel)}" style="color:var(--or); font-weight:700;">${esc(x.tel)}</a>
-          </span>
-          <span style="display:inline-flex; align-items:center; gap:5px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7zM7 17c-.55 0-1-.45-1-1h2c0 .55-.45 1-1 1zm12-1c0 1.66-1.34 3-3 3s-3-1.34-3-3h2c0 .55.45 1 1 1s1-.45 1-1h2z"/></svg>
-            ${x.mode === 'livraison' ? `Livraison : <b>${esc(x.quartier || 'Non précisé')}</b> (${esc(x.adresse || 'Sans repère')})` : '<b>Retrait sur place</b>'}
-          </span>
-        </small>
-
-        <div style="background:var(--iv); padding:14px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px;">
-          <strong>Détail des plats :</strong><br>
-          <span style="font-size:14.5px; line-height:1.6;">${x.items.map(l => `<b>${l.q}×</b> ${esc(l.n)}`).join(' • ')}</span>
-          ${x.note ? `<br><em style="color:var(--or2); font-size:13.5px; display:inline-block; margin-top:4px;">Note client : ${esc(x.note)}</em>` : ''}
-        </div>
-
-        <!-- Décision Administrateur : Accepter / Refuser -->
-        <div style="background:#FBF8F1; padding:12px 14px; border-radius:8px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-          <span style="font-size:13.5px; font-weight:700;">Action Directe :</span>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <button class="btn-acc" data-num="${x.num}" data-action="accept" ${x.statut === 'Confirmée' ? 'disabled style="opacity:0.6; cursor:default;"' : ''}>
-              ✓ Valider la commande
-            </button>
-            <button class="btn-ref" data-num="${x.num}" data-action="reject" ${x.statut === 'Annulée' ? 'disabled style="opacity:0.6; cursor:default;"' : ''}>
-              ✕ Refuser / Annuler
-            </button>
-          </div>
-        </div>
-
-        <div class="g">
-          <div>
-            <label style="margin-top:0;">Étape de préparation</label>
-            ${sel(STAT, x.statut, 'statut', i)}
-          </div>
-          <div>
-            <label style="margin-top:0;">Statut de paiement</label>
-            ${sel(PAY, x.paiement, 'paiement', i)}
-          </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn ln" style="font-size:12px; padding:6px 12px;" onclick="renderOrdersManagement(document.getElementById('dash_body'))">Actualiser</button>
         </div>
       </div>
-    `;
-  }).join('') : '<p class="empty">Aucune commande enregistrée pour le moment.</p>';
-}
 
-function dishes() {
-  const m = G();
-  B().innerHTML = `
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Photo</th>
-          <th>Plat</th>
-          <th>Catégorie</th>
-          <th>Prix FCFA</th>
-          <th style="text-align:center;">En Stock</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        ${m.map(d => `
-          <tr>
-            <td style="width:50px;">
-              <img src="${d.img || 'assets/images/hero.jpg'}" style="width:42px; height:42px; border-radius:6px; object-fit:cover;" onerror="this.onerror=null;this.src='assets/images/hero.jpg'">
-            </td>
-            <td><strong>${esc(d.n)}</strong></td>
-            <td><span class="pill" style="font-size:12px;">${esc(d.c)}</span></td>
-            <td style="width:130px;">
-              <input type="number" min="0" value="${d.p}" data-pr="${d.id}" style="width:110px; font-weight:700;">
-            </td>
-            <td style="text-align:center; width:90px;">
-              <input type="checkbox" ${d.a ? 'checked' : ''} data-av="${d.id}" style="width:22px; height:22px; cursor:pointer;">
-            </td>
-            <td style="text-align:right;">
-              <button class="x" data-del="${d.id}">Supprimer</button>
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>RÉFÉRENCE</th>
+              <th>CLIENT & CONTACT</th>
+              <th>MODE & ADRESSE</th>
+              <th>PLATS COMMANDÉS</th>
+              <th>TOTAL</th>
+              <th>STATUT ACTUEL</th>
+              <th>DÉCISION ADMIN</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${o.length ? o.map((x, i) => {
+              const isEnAttente = x.statut === 'En attente';
+              const isAnnulee = x.statut === 'Annulée';
+              const isConfirmee = ['Confirmée', 'En préparation', 'Prête', 'En livraison', 'Terminée'].includes(x.statut);
 
-    <div class="oc" style="margin-top:20px;">
-      <h3>Ajouter un Nouveau Plat au Menu</h3>
-      <div class="g" style="margin-top:10px;">
-        <input id="an" placeholder="Nom du plat (ex: Demi Poulet Braisé)">
-        <select id="ac">
-          ${CATS.map(c => `<option>${c}</option>`).join('')}
-        </select>
-        <input id="ap" type="number" placeholder="Prix en FCFA (ex: 4500)">
-        <input id="ad" placeholder="Courte description alléchante...">
+              return `
+                <tr>
+                  <td><b style="color:#e86f1c; font-size:13.5px;">${esc(x.num)}</b></td>
+                  <td>
+                    <strong>${esc(x.nom)}</strong><br>
+                    <a href="tel:${esc(x.tel)}" style="color:#1890ff; font-size:12px; text-decoration:none;">${esc(x.tel)}</a>
+                  </td>
+                  <td>
+                    <span style="font-size:12.5px;">
+                      ${x.mode === 'livraison' ? `🛵 Livraison : <b>${esc(x.quartier || 'Non précisé')}</b>` : '🍽️ Retrait sur place'}
+                    </span>
+                  </td>
+                  <td>
+                    <span style="font-size:12.5px; color:#5e6278;">
+                      ${x.items.map(l => `${l.q}× ${esc(l.n)}`).join(', ')}
+                    </span>
+                  </td>
+                  <td>
+                    <b style="color:#181c32; font-size:14px;">${FCFA(x.total)}</b>
+                  </td>
+                  <td>
+                    <span class="badge-status ${isAnnulee ? 'danger' : isConfirmee ? 'success' : 'warning'}">
+                      ${esc(x.statut)}
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn-acc" data-num="${x.num}" data-action="accept" style="padding:5px 10px; font-size:12px;" ${x.statut === 'Confirmée' ? 'disabled style="opacity:0.5;"' : ''}>
+                        ✓ Valider
+                      </button>
+                      <button class="btn-ref" data-num="${x.num}" data-action="reject" style="padding:5px 10px; font-size:12px;" ${x.statut === 'Annulée' ? 'disabled style="opacity:0.5;"' : ''}>
+                        ✕ Refuser
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('') : `
+              <tr>
+                <td colspan="7" style="text-align:center; padding:30px; color:#7e8299;">Aucune commande passée sur le site pour l'instant.</td>
+              </tr>
+            `}
+          </tbody>
+        </table>
       </div>
-      <button class="btn dk" id="add" style="margin-top:14px;">+ Ajouter le plat à la carte</button>
     </div>
   `;
 }
 
+function renderMenuManagement(container) {
+  const m = G();
+
+  container.innerHTML = `
+    <div class="dash-panel">
+      <div class="dash-panel-header">
+        <div>
+          <h3 class="dash-panel-title">Carte des Plats & Gestion des Prix</h3>
+          <span style="font-size:12.5px; color:#7e8299;">Modification immédiate des prix, mise en rupture de stock et suppression</span>
+        </div>
+      </div>
+
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>IMAGE</th>
+              <th>NOM DU PLAT</th>
+              <th>CATÉGORIE</th>
+              <th>PRIX EN FCFA</th>
+              <th>EN STOCK</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${m.map(d => `
+              <tr>
+                <td style="width:60px;">
+                  <img src="${d.img || 'assets/images/hero.jpg'}" style="width:44px; height:44px; border-radius:8px; object-fit:cover;" onerror="this.onerror=null;this.src='assets/images/hero.jpg'">
+                </td>
+                <td><strong>${esc(d.n)}</strong></td>
+                <td><span class="badge-status info">${esc(d.c)}</span></td>
+                <td>
+                  <input type="number" min="0" value="${d.p}" data-pr="${d.id}" style="width:110px; padding:6px 10px; font-weight:700; border-radius:6px; border:1px solid #ebedf2;">
+                </td>
+                <td>
+                  <label style="cursor:pointer; display:flex; align-items:center; gap:6px; font-weight:600; font-size:13px;">
+                    <input type="checkbox" ${d.a ? 'checked' : ''} data-av="${d.id}" style="width:18px; height:18px; cursor:pointer;">
+                    ${d.a ? '<span style="color:#52c41a;">Disponible</span>' : '<span style="color:#f5222d;">Épuisé</span>'}
+                  </label>
+                </td>
+                <td>
+                  <button class="x" data-del="${d.id}" style="padding:6px 12px; font-size:12px;">Supprimer</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- AJOUT D'UN NOUVEAU METS -->
+      <div style="background:#fafbfd; border:1px solid #ebedf2; border-radius:10px; padding:20px; margin-top:24px;">
+        <h4 style="margin:0 0 14px; font-size:15px; font-weight:700;">+ Ajouter un Nouveau Plat à la Carte Officielle</h4>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+          <input id="an" placeholder="Nom du plat (ex: Poulet Braisé XL)" style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
+          <select id="ac" style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
+            ${CATS.map(c => `<option>${c}</option>`).join('')}
+          </select>
+          <input id="ap" type="number" placeholder="Prix FCFA (ex: 7000)" style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
+          <input id="ad" placeholder="Courte description alléchante..." style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
+        </div>
+        <button id="btn_add_dish" style="margin-top:14px; background:#e86f1c; color:#fff; font-weight:700; border:none; border-radius:8px; padding:10px 18px; cursor:pointer;">
+          + Enregistrer le plat
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// GESTION DES CLICS & ONGLETS
 A.addEventListener('click', e => {
+  const btnTab = e.target.closest('[data-tab]');
+  if (btnTab) {
+    currentTab = btnTab.dataset.tab;
+    view();
+    return;
+  }
+
   const t = e.target.closest('button') || e.target;
   const d = t.dataset;
 
-  if (d.t) {
-    tab = d.t;
-    view();
-  }
-
+  // Validation commande
   if (d.action === 'accept') {
     const o = O();
     const cmd = o.find(y => y.num === d.num);
     if (cmd) {
       cmd.statut = 'Confirmée';
       store.set('bcw_orders', o);
-      orders();
+      renderOrdersManagement(document.getElementById('dash_body'));
     }
   }
 
+  // Refus commande
   if (d.action === 'reject') {
-    if (confirm(`Confirmez-vous l'annulation de la commande ${d.num} ?`)) {
+    if (confirm(`Confirmez-vous le rejet de la commande ${d.num} ?`)) {
       const o = O();
       const cmd = o.find(y => y.num === d.num);
       if (cmd) {
         cmd.statut = 'Annulée';
         store.set('bcw_orders', o);
-        orders();
+        renderOrdersManagement(document.getElementById('dash_body'));
       }
     }
   }
 
-  if (d.del && confirm('Êtes-vous sûr de vouloir retirer ce plat du menu ?')) {
+  // Suppression plat
+  if (d.del && confirm('Voulez-vous retirer ce plat de la carte ?')) {
     store.set('bcw_menu', G().filter(x => x.id != d.del));
-    dishes();
+    renderMenuManagement(document.getElementById('dash_body'));
   }
 
-  if (t.id === 'add') {
+  // Ajout plat
+  if (t.id === 'btn_add_dish') {
     const n = document.getElementById('an').value.trim();
     const p = +document.getElementById('ap').value;
     const desc = document.getElementById('ad').value.trim();
     const cat = document.getElementById('ac').value;
 
-    if (!n || !(p >= 0)) return alert('Le nom et le prix en FCFA sont obligatoires.');
+    if (!n || !(p >= 0)) return alert('Veuillez spécifier le nom et le prix en FCFA.');
 
     const m = G();
     m.push({
@@ -375,25 +589,20 @@ A.addEventListener('click', e => {
       n: n,
       c: cat,
       p: p,
-      d: desc || 'Préparation artisanale aux saveurs de Côte d\'Ivoire.',
+      d: desc || 'Spécialité gastronomique de Bolikro Chez Wolf.',
       img: 'assets/images/hero.jpg',
       badge: 'Nouveau',
       a: true
     });
     store.set('bcw_menu', m);
-    dishes();
+    renderMenuManagement(document.getElementById('dash_body'));
   }
 });
 
+// GESTION DES MODIFICATIONS DE PRIX & DISPONIBILITÉ
 A.addEventListener('change', e => {
   const t = e.target;
   const d = t.dataset;
-
-  if (d.k) {
-    const o = O();
-    o[d.i][d.k] = t.value;
-    store.set('bcw_orders', o);
-  }
 
   if (d.pr || d.av) {
     const m = G();
@@ -402,8 +611,10 @@ A.addEventListener('change', e => {
       if (d.pr) x.p = +t.value;
       else x.a = t.checked;
       store.set('bcw_menu', m);
+      renderMenuManagement(document.getElementById('dash_body'));
     }
   }
 });
 
+// Lancement au chargement
 view();
