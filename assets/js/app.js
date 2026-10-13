@@ -232,22 +232,33 @@ if (nextBtn) {
       return showStep();
     }
 
-    // Validation finale de la commande
+    // Validation finale et sécurisée de la commande
     const payChoice = document.querySelector('[name=pay]:checked')?.value || 'cash';
-    const o = {
-      num: 'BCW-' + Date.now().toString(36).toUpperCase().slice(-5),
-      date: new Date().toISOString(),
-      nom: $('#nom').value.trim(),
-      tel: $('#tel').value.trim(),
-      mode: mode,
-      quartier: $('#qua') ? $('#qua').value.trim() : '',
-      adresse: $('#adr') ? $('#adr').value.trim() : '',
-      note: $('#nte') ? $('#nte').value.trim() : '',
-      items: lines().map(l => ({ n: l.d.n, p: l.d.p, q: l.q })),
-      total: sub() + (mode === 'livraison' ? FEE : 0),
-      statut: 'En attente',
-      paiement: payChoice === 'cash' ? 'Règlement à la réception' : 'Mobile Money Initié'
-    };
+    let validatedOrder;
+    try {
+      const rawOrder = {
+        num: 'BCW-' + Date.now().toString(36).toUpperCase().slice(-5),
+        date: new Date().toISOString(),
+        nom: $('#nom').value.trim(),
+        tel: $('#tel').value.trim(),
+        mode: mode,
+        quartier: $('#qua') ? $('#qua').value.trim() : '',
+        adresse: $('#adr') ? $('#adr').value.trim() : '',
+        note: $('#nte') ? $('#nte').value.trim() : '',
+        items: lines().map(l => ({ n: l.d.n, p: l.d.p, q: l.q })),
+        total: sub() + (mode === 'livraison' ? FEE : 0),
+        statut: 'En attente',
+        paiement: payChoice === 'cash' ? 'Règlement à la réception' : 'Mobile Money Initié'
+      };
+
+      validatedOrder = (typeof BolikroSecurity !== 'undefined')
+        ? BolikroSecurity.validateOrderPayload(rawOrder)
+        : rawOrder;
+    } catch (err) {
+      return er(err.message || 'Erreur lors de la validation de la commande.');
+    }
+
+    const o = validatedOrder;
 
     const all = store.get('bcw_orders', []);
     all.unshift(o);

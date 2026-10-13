@@ -21,6 +21,9 @@ const store = {
   }
 };
 
+if (typeof window !== 'undefined') window.store = store;
+if (typeof global !== 'undefined') global.store = store;
+
 const CATS = ['Nos grillades', 'Nos soupes', 'Nos Kédjénous', 'Nos accompagnements'];
 
 /* 
@@ -264,3 +267,16 @@ const DEF = [
 const STAT = ['En attente', 'Confirmée', 'En préparation', 'Prête', 'En livraison', 'Terminée', 'Annulée'];
 const PAY = ['Règlement à la réception', 'Mobile Money Wave (Confirmé)', 'Mobile Money Orange (Confirmé)', 'Mobile Money MTN (Confirmé)', 'Paiement échoué'];
 const FEE = 0; /* Frais de livraison à confirmer par Bolikro Chez Wolf — Yamoussoukro */
+
+if (typeof window !== 'undefined') {
+  window.DEF = DEF;
+  window.STAT = STAT;
+  window.PAY = PAY;
+  window.FEE = FEE;
+}
+if (typeof global !== 'undefined') {
+  global.DEF = DEF;
+  global.STAT = STAT;
+  global.PAY = PAY;
+  global.FEE = FEE;
+}
