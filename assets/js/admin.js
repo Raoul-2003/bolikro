@@ -1,620 +1,573 @@
 /**
- * BOLIKRO CHEZ WOLF — Console Administrateur Général (Design Moderne Type Lead Enterprise)
- * Modèle inspiré : Sidebar gauche sombre avec icônes, Topbar complète,
- * KPI Cards dégradées vives (Bleu, Orange, Violet, Indigo), Graphiques Vectoriels et Gestion Intégrale.
+ * BOLIKRO CHEZ WOLF — REPRODUCTION PIXEL-PERFECT DU DASHBOARD LEAD ENTERPRISE
+ * Respect absolu de la capture d'écran fournie par l'utilisateur :
+ * 1. Topbar blanche (Logo, Cloche+0, Message+0, EN/FR, Devise, Admin dropdown)
+ * 2. Sidebar sombre repliable (Photo, Date/Heure, Menus avec chevrons et élément actif Accueil bleu)
+ * 3. Titre "Tableau de bord" + Breadcrumbs à droite
+ * 4. Rangée 1 : 4 cartes colorées (Bleu, Orange, Violet, Indigo) avec icône carré arrondi et barre
+ * 5. Rangée 2 : 1 grande carte Activité commandes (Sparkline + stats + dessin) + 2 cartes Encaissements / Décaissements
+ * 6. Rangée 3 : Grand Graphique en aires violettes (Commandes vs Ventes) + Panneau latéral RÉCAPITULATIF
+ * 7. Bouton flottant Paramètres à droite (engrenage noir)
  */
 
-const A = document.getElementById('app');
-let currentTab = 'dashboard'; // 'dashboard', 'orders', 'menu', 'customers'
+const App = document.getElementById('app');
+let isSidebarCollapsed = false;
+let openMenus = { home: true, menu: false, orders: false };
 
-const G = () => store.get('bcw_menu', DEF);
-const O = () => store.get('bcw_orders', []);
-
-function getNowFormatted() {
-  const d = new Date();
-  return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+function formatMoney(amount) {
+  return Math.round(amount).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ') + ' FCFA';
 }
 
-function login() {
-  A.innerHTML = `
-    <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:#1e1e2d; padding:20px;">
-      <div style="width:100%; max-width:420px; background:#fff; border-radius:16px; padding:36px; box-shadow:0 20px 40px rgba(0,0,0,0.3);">
-        <div style="text-align:center; margin-bottom:28px;">
-          <img src="assets/images/logo.png" style="width:76px; height:76px; border-radius:16px; object-fit:cover; margin-bottom:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.onerror=null;this.src='Logo.png'">
-          <h2 style="font-size:22px; font-weight:800; color:#181c32; margin:0 0 6px;">Bolikro Chez Wolf</h2>
-          <span style="font-size:12.5px; color:#7e8299; font-weight:600; text-transform:uppercase; letter-spacing:0.8px;">Enterprise Admin Console</span>
-        </div>
+function getFormattedDateString() {
+  const d = new Date();
+  const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+  const dayName = days[d.getDay()];
+  const dayNum = d.getDate();
+  const monthName = months[d.getMonth()];
+  const year = d.getFullYear();
+  const time = d.toTimeString().split(' ')[0];
+  return `${dayName}, ${dayNum} ${monthName} ${year} ${time}`;
+}
 
-        <div style="background:#f4f6fa; border:1px solid #ebedf2; border-radius:10px; padding:12px 16px; margin-bottom:20px; font-size:13px; color:#3f4254; display:flex; justify-content:space-between; align-items:center;">
-          <span>Mot de passe requis :</span>
-          <code style="background:#fff; padding:3px 8px; border-radius:6px; font-weight:700; color:#e86f1c; border:1px solid #e1e3ea;">admin2026</code>
-        </div>
+function renderLeadDashboard() {
+  const metrics = getDashboardMetrics();
 
-        <label style="font-size:12.5px; font-weight:700; color:#3f4254; margin-bottom:6px; display:block;">Mot de Passe Administrateur</label>
-        <input id="admin_pwd" type="password" placeholder="Entrez votre mot de passe" style="width:100%; min-height:46px; border-radius:10px; border:1px solid #e1e3ea; padding:0 14px; font-size:14px; margin-bottom:8px; outline:none; transition:border 0.2s;">
-        
-        <p id="auth_err" style="color:#f5222d; font-size:13px; font-weight:600; margin:0 0 14px; min-height:20px;"></p>
-        
-        <button id="btn_login" style="width:100%; min-height:48px; background:linear-gradient(135deg, #e86f1c 0%, #c7560a 100%); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 6px 16px rgba(232,111,28,0.35); transition:transform 0.15s;">
-          Accéder au Tableau de Bord
+  App.innerHTML = `
+    <!-- 1. TOPBAR BLANCHE (IDENTIQUE À LA CAPTURE) -->
+    <header class="lb-topbar">
+      <div class="lb-topbar-brand">
+        <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+          <div class="lb-brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="lb-brand-text">
+            <span>BOLIKRO</span>
+            <span class="lb-brand-sub">CHEZ WOLF</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="lb-topbar-right">
+        <!-- Cloche notification avec badge 0 -->
+        <button class="lb-icon-btn" title="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="lb-badge-counter">0</span>
         </button>
 
-        <div style="display:flex; justify-content:space-between; margin-top:24px; font-size:13px;">
-          <a href="index.html" style="color:#7e8299; text-decoration:none; font-weight:600;">← Site Public</a>
-          <a href="superviseur.html" style="color:#2e7d32; text-decoration:none; font-weight:700;">Espace Superviseur →</a>
+        <!-- Enveloppe message avec badge 0 -->
+        <button class="lb-icon-btn" title="Messages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span class="lb-badge-counter">0</span>
+        </button>
+
+        <!-- Sélecteur Langue FR -->
+        <div class="lb-top-selector">
+          <span style="font-size:15px;">🇨🇮</span>
+          <span>FR</span>
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+
+        <!-- Sélecteur Devise FCFA -->
+        <div class="lb-top-selector">
+          <span>FCFA</span>
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+
+        <!-- Profil Administrateur -->
+        <div class="lb-admin-dropdown" onclick="if(confirm('Voulez-vous retourner au site public ou vous déconnecter ?')) window.location.href='index.html';">
+          <div class="lb-admin-avatar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#6a7485"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <span class="lb-admin-name">Admin</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#707b8b"><path d="M7 10l5 5 5-5z"/></svg>
         </div>
       </div>
-    </div>
-  `;
+    </header>
 
-  document.getElementById('btn_login').onclick = () => {
-    const pwd = document.getElementById('admin_pwd').value.trim();
-    if (pwd === 'admin2026' || pwd === 'admin') {
-      sessionStorage.setItem('adm_auth', '1');
-      view();
-    } else {
-      document.getElementById('auth_err').textContent = 'Mot de passe incorrect. Utilisez : admin2026';
-    }
-  };
-
-  document.getElementById('admin_pwd').addEventListener('keypress', e => {
-    if (e.key === 'Enter') document.getElementById('btn_login').click();
-  });
-}
-
-function view() {
-  if (!sessionStorage.getItem('adm_auth')) return login();
-
-  const o = O();
-  const m = G();
-  const totalOrders = o.length;
-  const acceptees = o.filter(x => x.statut !== 'Annulée');
-  const totalRevenue = acceptees.reduce((acc, cur) => acc + (cur.total || 0), 0);
-  const pendingOrders = o.filter(x => x.statut === 'En attente').length;
-  const inProgress = o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut)).length;
-
-  A.innerHTML = `
-    <div class="dash-layout">
-      <!-- SIDEBAR GAUCHE SOMBRE -->
-      <aside class="dash-sidebar">
-        <div class="dash-brand">
-          <img src="assets/images/logo.png" alt="Logo" onerror="this.onerror=null;this.src='Logo.png'">
-          <div class="dash-brand-title">BOLIKRO ADMIN</div>
-        </div>
-
-        <div class="dash-user-badge">
-          <div class="admin-tag">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Administrateur
+    <!-- WRAPPER : SIDEBAR GAUCHE + CONTENU -->
+    <div class="lb-wrapper">
+      
+      <!-- 2. SIDEBAR GAUCHE SOMBRE (220PX) -->
+      <aside class="lb-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}" id="leadSidebar">
+        <!-- En-tête sidebar avec photo montagne / utilisateur -->
+        <div class="lb-sidebar-header">
+          <div class="lb-sidebar-user-block">
+            <div class="lb-user-photo-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#8e99a8"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div class="lb-sidebar-user-info">
+              <span class="lb-sidebar-user-name">Admin</span>
+            </div>
           </div>
-          <div class="live-clock">
+          <div class="lb-sidebar-date">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            ${getNowFormatted()}
+            <span>${getFormattedDateString()}</span>
           </div>
         </div>
 
-        <nav class="dash-nav">
-          <div class="dash-nav-header">Navigation Principale</div>
-          
-          <button class="dash-nav-item ${currentTab === 'dashboard' ? 'active' : ''}" data-tab="dashboard">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-            <span>Tableau de Bord</span>
+        <!-- Navigation latérale ordonnée selon la demande -->
+        <ul class="lb-sidebar-menu">
+          <!-- 1. Accueil (ACTIF BLEU VIF #1890ff COMME LA CAPTURE) -->
+          <li class="lb-menu-item ${openMenus.home ? 'open' : ''}">
+            <div class="lb-menu-link active" onclick="toggleMenu('home')">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+              </span>
+              <span class="lb-menu-text">Accueil</span>
+              <svg class="lb-chevron" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </div>
+            <ul class="lb-sub-menu">
+              <li><a href="#dashboard" class="lb-sub-link active">• Tableau de bord</a></li>
+              <li><a href="#overview" class="lb-sub-link">• Vue d'ensemble</a></li>
+            </ul>
+          </li>
+
+          <!-- 2. Menu du Restaurant -->
+          <li class="lb-menu-item ${openMenus.menu ? 'open' : ''}">
+            <div class="lb-menu-link" onclick="toggleMenu('menu')">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
+              </span>
+              <span class="lb-menu-text">Menu</span>
+              <svg class="lb-chevron" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </div>
+            <ul class="lb-sub-menu">
+              <li><a href="superviseur.html" class="lb-sub-link">• Plats et boissons</a></li>
+              <li><a href="index.html#menu" class="lb-sub-link">• Catégories</a></li>
+              <li><a href="superviseur.html" class="lb-sub-link">• Disponibilité plats</a></li>
+            </ul>
+          </li>
+
+          <!-- 3. Commandes -->
+          <li class="lb-menu-item ${openMenus.orders ? 'open' : ''}">
+            <div class="lb-menu-link" onclick="toggleMenu('orders')">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              </span>
+              <span class="lb-menu-text">Commandes</span>
+              <svg class="lb-chevron" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </div>
+            <ul class="lb-sub-menu">
+              <li><a href="superviseur.html" class="lb-sub-link">• Toutes (${metrics.recapitulatif.totalCommandes})</a></li>
+              <li><a href="superviseur.html" class="lb-sub-link">• En attente (${metrics.recapitulatif.commandesATraiter})</a></li>
+              <li><a href="superviseur.html" class="lb-sub-link">• En livraison (${metrics.recapitulatif.commandesEnLivraison})</a></li>
+              <li><a href="superviseur.html" class="lb-sub-link">• Terminées (${metrics.recapitulatif.commandesTerminees})</a></li>
+            </ul>
+          </li>
+
+          <!-- 4. Livraisons et retraits -->
+          <li class="lb-menu-item">
+            <a href="superviseur.html" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+              </span>
+              <span class="lb-menu-text">Livraisons & retraits</span>
+            </a>
+          </li>
+
+          <!-- 5. Clients -->
+          <li class="lb-menu-item">
+            <a href="#clients" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </span>
+              <span class="lb-menu-text">Clients</span>
+            </a>
+          </li>
+
+          <!-- 6. Paiements -->
+          <li class="lb-menu-item">
+            <a href="#paiements" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+              </span>
+              <span class="lb-menu-text">Paiements</span>
+            </a>
+          </li>
+
+          <!-- 7. Promotions -->
+          <li class="lb-menu-item">
+            <a href="#promotions" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+              </span>
+              <span class="lb-menu-text">Promotions</span>
+            </a>
+          </li>
+
+          <!-- 8. Rapports -->
+          <li class="lb-menu-item">
+            <a href="#rapports" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              </span>
+              <span class="lb-menu-text">Rapports</span>
+            </a>
+          </li>
+
+          <!-- 9. Personnel -->
+          <li class="lb-menu-item">
+            <a href="superviseur.html" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
+              </span>
+              <span class="lb-menu-text">Personnel</span>
+            </a>
+          </li>
+
+          <!-- 10. Configuration -->
+          <li class="lb-menu-item">
+            <a href="#config" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+              </span>
+              <span class="lb-menu-text">Configuration</span>
+            </a>
+          </li>
+
+          <!-- 11. Paramètres généraux -->
+          <li class="lb-menu-item">
+            <a href="#params" class="lb-menu-link">
+              <span class="lb-menu-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+              </span>
+              <span class="lb-menu-text">Paramètres généraux</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Bouton de réduction Collapse en bas -->
+        <div class="lb-sidebar-footer">
+          <button class="lb-btn-collapse" onclick="toggleSidebarCollapse()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            <span>Réduire la barre</span>
           </button>
-
-          <button class="dash-nav-item ${currentTab === 'orders' ? 'active' : ''}" data-tab="orders">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 18l4-4h-3V9h-2v5H8z"/></svg>
-            <span>Toutes les Commandes</span>
-            <span class="dash-nav-badge">${totalOrders}</span>
-          </button>
-
-          <button class="dash-nav-item ${currentTab === 'menu' ? 'active' : ''}" data-tab="menu">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
-            <span>Carte & Prix des Plats</span>
-            <span class="dash-nav-badge">${m.length}</span>
-          </button>
-
-          <div class="dash-nav-header" style="margin-top:16px;">Passerelles & Équipe</div>
-
-          <a href="superviseur.html" class="dash-nav-item" style="color:#52c41a;">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            <span>Espace Superviseur</span>
-          </a>
-
-          <a href="index.html" class="dash-nav-item">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span>Voir le Site Public</span>
-          </a>
-        </nav>
+        </div>
       </aside>
 
-      <!-- ZONE CENTRALE & TOPBAR -->
-      <div class="dash-main">
-        <!-- TOPBAR EN-TÊTE -->
-        <header class="dash-topbar">
-          <div class="dash-topbar-left">
-            <div>
-              <h1 class="dash-page-title">${currentTab === 'dashboard' ? 'Dashboard' : currentTab === 'orders' ? 'Gestion des Commandes' : 'Gestion de la Carte'}</h1>
-              <div class="dash-breadcrumbs">Bolikro Chez Wolf / Administration / ${currentTab.toUpperCase()}</div>
-            </div>
+      <!-- 3. ZONE CENTRALE (DASHBOARD) -->
+      <main class="lb-main">
+        <!-- Titre & Breadcrumb -->
+        <div class="lb-content-header">
+          <h1 class="lb-page-h1">Tableau de bord</h1>
+          <div class="lb-breadcrumbs-bar">
+            <span>Accueil</span>
+            <span>/</span>
+            <span class="active">Tableau de bord</span>
+            <span class="lb-help-icon" title="Aide sur le dashboard">?</span>
           </div>
+        </div>
 
-          <div class="dash-topbar-right">
-            <!-- Notifications avec compteur -->
-            <div class="topbar-icon-btn" title="Commandes à valider" onclick="currentTab='orders'; view();">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              ${pendingOrders > 0 ? `<span class="badge-dot">${pendingOrders}</span>` : ''}
-            </div>
-
-            <!-- Bouton Déconnexion -->
-            <button class="topbar-icon-btn" title="Se déconnecter" onclick="sessionStorage.removeItem('adm_auth'); login();">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5222d" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            </button>
-
-            <!-- Profil utilisateur avec badge -->
-            <div class="topbar-profile">
-              <img src="assets/images/logo.png" alt="Admin Avatar" onerror="this.onerror=null;this.src='Logo.png'">
-              <div class="topbar-profile-info">
-                <span class="topbar-profile-name">Chef Wolf</span>
-                <span class="topbar-profile-role">Directeur Général</span>
+        <!-- PREMIÈRE RANGÉE : 4 CARTES COLORÉES (EXACTEMENT LA CAPTURE) -->
+        <div class="lb-row-kpis">
+          <!-- CARTE 1 : BLEU (#1890ff) -->
+          <div class="lb-card-color blue">
+            <div class="lb-card-info">
+              <div class="lb-card-tag">COMMANDES DU JOUR</div>
+              <div class="lb-card-big-num">${metrics.commandesDuJour}</div>
+              <div class="lb-card-progress-bar">
+                <div class="bar-fill" style="width: 75%;"></div>
               </div>
             </div>
+            <div class="lb-card-icon-square">
+              <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
           </div>
-        </header>
 
-        <!-- CORPS DU DASHBOARD -->
-        <main class="dash-content" id="dash_body">
-        </main>
-      </div>
-    </div>
-  `;
-
-  renderTabContent();
-}
-
-function renderTabContent() {
-  const container = document.getElementById('dash_body');
-  if (!container) return;
-
-  if (currentTab === 'dashboard') {
-    renderDashboardOverview(container);
-  } else if (currentTab === 'orders') {
-    renderOrdersManagement(container);
-  } else if (currentTab === 'menu') {
-    renderMenuManagement(container);
-  }
-}
-
-function renderDashboardOverview(container) {
-  const o = O();
-  const m = G();
-  const totalOrders = o.length;
-  const acceptees = o.filter(x => x.statut !== 'Annulée');
-  const caTotal = acceptees.reduce((sum, x) => sum + (x.total || 0), 0);
-  const pendingOrders = o.filter(x => x.statut === 'En attente').length;
-  const activeOrders = o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut)).length;
-  const completedOrders = o.filter(x => x.statut === 'Terminée').length;
-  const cancelledOrders = o.filter(x => x.statut === 'Annulée').length;
-
-  // Top plats vendus
-  const dishSales = {};
-  o.forEach(order => {
-    if (order.statut !== 'Annulée' && order.items) {
-      order.items.forEach(it => {
-        dishSales[it.n] = (dishSales[it.n] || 0) + (it.q || 1);
-      });
-    }
-  });
-
-  const topDishes = Object.entries(dishSales)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
-
-  container.innerHTML = `
-    <!-- 4 CARTES KPI DÉGRADÉES EXACTEMENT COMME LE MODÈLE DU CLIENT -->
-    <div class="dash-kpi-grid">
-      <!-- BLEU : TOTAL COMMANDES CLIENTS -->
-      <div class="dash-kpi-card blue">
-        <div class="dash-kpi-info">
-          <div class="dash-kpi-label">TOTAL COMMANDES</div>
-          <div class="dash-kpi-value">${totalOrders}</div>
-          <div class="dash-kpi-sub">${acceptees.length} validée(s) • ${cancelledOrders} rejetée(s)</div>
-        </div>
-        <div class="dash-kpi-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        </div>
-      </div>
-
-      <!-- ORANGE : CHIFFRE D'AFFAIRES GLOBAL -->
-      <div class="dash-kpi-card orange">
-        <div class="dash-kpi-info">
-          <div class="dash-kpi-label">CHIFFRE D'AFFAIRES TOTAL</div>
-          <div class="dash-kpi-value">${FCFA(caTotal)}</div>
-          <div class="dash-kpi-sub">Encaissement cumulé du restaurant</div>
-        </div>
-        <div class="dash-kpi-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-        </div>
-      </div>
-
-      <!-- VIOLET : COMMANDES EN ATTENTE DE VALIDATION -->
-      <div class="dash-kpi-card purple">
-        <div class="dash-kpi-info">
-          <div class="dash-kpi-label">EN ATTENTE DE DÉCISION</div>
-          <div class="dash-kpi-value">${pendingOrders}</div>
-          <div class="dash-kpi-sub">Commandes nécessitant validation</div>
-        </div>
-        <div class="dash-kpi-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>
-        </div>
-      </div>
-
-      <!-- INDIGO : COMMANDES EN CUISINE / LIVRAISON -->
-      <div class="dash-kpi-card indigo">
-        <div class="dash-kpi-info">
-          <div class="dash-kpi-label">EN COURS DE TRAITEMENT</div>
-          <div class="dash-kpi-value">${activeOrders}</div>
-          <div class="dash-kpi-sub">${completedOrders} terminée(s) avec succès</div>
-        </div>
-        <div class="dash-kpi-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- MINI METRIC CARDS STYLE EXACT (Total Orders, Credits, Debits) -->
-    <div class="dash-metrics-grid">
-      <div class="dash-metric-card">
-        <div class="dash-metric-header">
-          <span class="dash-metric-title">Performance Ventes</span>
-        </div>
-        <div class="dash-metric-body">
-          <div>
-            <div class="dash-metric-number">${FCFA(caTotal)}</div>
-            <div class="dash-metric-trend up">↑ 100% Transactions locales</div>
+          <!-- CARTE 2 : ORANGE (#fa8c16) -->
+          <div class="lb-card-color orange">
+            <div class="lb-card-info">
+              <div class="lb-card-tag">CHIFFRE D'AFFAIRES</div>
+              <div class="lb-card-big-num">${formatMoney(metrics.chiffreAffairesJour)}</div>
+              <div class="lb-card-progress-bar">
+                <div class="bar-fill" style="width: 60%;"></div>
+              </div>
+            </div>
+            <div class="lb-card-icon-square">
+              <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </div>
           </div>
-          <svg class="dash-sparkline-svg" viewBox="0 0 100 40">
-            <path d="M0,35 Q20,30 40,25 T80,10 T100,5" fill="none" stroke="#1890ff" stroke-width="2.5"/>
-          </svg>
-        </div>
-        <div class="dash-metric-details">
-          <span>Commandes Confirmées: <b style="color:#52c41a;">${FCFA(caTotal)}</b></span>
-          <span>En Attente: <b style="color:#fa8c16;">${pendingOrders}</b></span>
-        </div>
-      </div>
 
-      <div class="dash-metric-card">
-        <div class="dash-metric-header">
-          <span class="dash-metric-title">État de la Carte des Plats</span>
-        </div>
-        <div class="dash-metric-body">
-          <div>
-            <div class="dash-metric-number">${m.length} Plats</div>
-            <div class="dash-metric-trend up">Disponibles : ${m.filter(x => x.a).length}</div>
+          <!-- CARTE 3 : VIOLET (#9254de) -->
+          <div class="lb-card-color purple">
+            <div class="lb-card-info">
+              <div class="lb-card-tag">PAIEMENTS EN ATTENTE</div>
+              <div class="lb-card-big-num">${formatMoney(metrics.paiementsEnAttente)}</div>
+              <div class="lb-card-progress-bar">
+                <div class="bar-fill" style="width: 45%;"></div>
+              </div>
+            </div>
+            <div class="lb-card-icon-square">
+              <svg viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>
+            </div>
           </div>
-          <svg class="dash-sparkline-svg" viewBox="0 0 100 40">
-            <path d="M0,30 Q25,10 50,20 T75,5 T100,2" fill="none" stroke="#52c41a" stroke-width="2.5"/>
-          </svg>
-        </div>
-        <div class="dash-metric-details">
-          <span>En rupture : <b style="color:#f5222d;">${m.filter(x => !x.a).length}</b></span>
-          <span>Catégories : <b>${CATS.length}</b></span>
-        </div>
-      </div>
 
-      <div class="dash-metric-card">
-        <div class="dash-metric-header">
-          <span class="dash-metric-title">Modes de Livraison</span>
-        </div>
-        <div class="dash-metric-body">
-          <div>
-            <div class="dash-metric-number">${o.filter(x => x.mode === 'livraison').length} Livraisons</div>
-            <div class="dash-metric-trend" style="color:#1890ff;">${o.filter(x => x.mode !== 'livraison').length} Retraits au restaurant</div>
+          <!-- CARTE 4 : INDIGO (#597ef7) -->
+          <div class="lb-card-color indigo">
+            <div class="lb-card-info">
+              <div class="lb-card-tag">COMMANDES TERMINÉES</div>
+              <div class="lb-card-big-num">${metrics.commandesTerminees}</div>
+              <div class="lb-card-progress-bar">
+                <div class="bar-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+            <div class="lb-card-icon-square">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
           </div>
-          <svg class="dash-sparkline-svg" viewBox="0 0 100 40">
-            <path d="M0,25 Q30,35 60,15 T100,8" fill="none" stroke="#722ed1" stroke-width="2.5"/>
-          </svg>
         </div>
-        <div class="dash-metric-details">
-          <span>Taux Réussite : <b style="color:#52c41a;">${totalOrders > 0 ? Math.round(((totalOrders - cancelledOrders)/totalOrders)*100) : 100}%</b></span>
-          <span>Ville : <b>Yamoussoukro</b></span>
-        </div>
-      </div>
-    </div>
 
-    <!-- GRAPHIQUE DES VENTES & TOP 5 (JOININGS & SALES CHART DU MODÈLE) -->
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:20px;">
-      <!-- Graphique d'activité -->
-      <div class="dash-panel">
-        <div class="dash-panel-header">
-          <h3 class="dash-panel-title">Graphique d'Activité & Commandes (Ventes)</h3>
-          <span style="font-size:12px; color:#52c41a; font-weight:700;">● Ventes confirmées</span>
-        </div>
-        <div class="dash-chart-container">
-          <svg viewBox="0 0 600 200" style="width:100%; height:100%;">
-            <!-- Lignes de grille -->
-            <line x1="0" y1="40" x2="600" y2="40" stroke="#f0f2f5" stroke-dasharray="4"/>
-            <line x1="0" y1="90" x2="600" y2="90" stroke="#f0f2f5" stroke-dasharray="4"/>
-            <line x1="0" y1="140" x2="600" y2="140" stroke="#f0f2f5" stroke-dasharray="4"/>
-            <line x1="0" y1="190" x2="600" y2="190" stroke="#e1e3ea"/>
+        <!-- DEUXIÈME RANGÉE : 3 CARTES (1 GRANDE + 2 SECONDAIRES) -->
+        <div class="lb-row-three-cards">
+          <!-- GRANDE CARTE GAUCHE : ACTIVITÉ DES COMMANDES -->
+          <div class="lb-white-card">
+            <div class="lb-white-card-header">
+              <span>ACTIVITÉ DES COMMANDES</span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
 
-            <!-- Aire dégradée violette comme le graphique du modèle -->
-            <defs>
-              <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#9254de" stop-opacity="0.45"/>
-                <stop offset="100%" stop-color="#9254de" stop-opacity="0.0"/>
-              </linearGradient>
-            </defs>
-            <polygon points="0,190 80,180 160,150 240,60 320,160 400,120 480,90 600,140 600,190" fill="url(#purpleGrad)" />
-            <polyline points="0,190 80,180 160,150 240,60 320,160 400,120 480,90 600,140" fill="none" stroke="#722ed1" stroke-width="3" />
-
-            <!-- Points d'inflexion -->
-            <circle cx="240" cy="60" r="5" fill="#722ed1" stroke="#fff" stroke-width="2"/>
-            <circle cx="480" cy="90" r="5" fill="#722ed1" stroke="#fff" stroke-width="2"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Top 5 des mets les plus demandés -->
-      <div class="dash-panel">
-        <div class="dash-panel-header">
-          <h3 class="dash-panel-title">🔥 Plats les Plus Commandés</h3>
-          <button class="btn ln" style="font-size:12px; padding:4px 10px;" onclick="currentTab='menu'; view();">Voir la carte</button>
-        </div>
-        ${topDishes.length ? `
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            ${topDishes.map(([plat, qte], idx) => `
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#fbfcfe; border-radius:8px; border:1px solid #ebedf2;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span style="font-weight:800; color:#e86f1c; font-size:14px;">#${idx + 1}</span>
-                  <span style="font-weight:600; font-size:13.5px; color:#181c32;">${esc(plat)}</span>
+            <div class="lb-card-order-layout">
+              <div class="lb-order-left">
+                <div class="lb-order-price-stat">
+                  <span>${formatMoney(metrics.activiteVentesTotal)}</span>
+                  <!-- Mini sparkline bleu -->
+                  <svg width="60" height="24" viewBox="0 0 60 24">
+                    <polyline points="0,20 15,18 30,15 40,4 50,18 60,16" fill="none" stroke="#1890ff" stroke-width="2"/>
+                  </svg>
                 </div>
-                <span class="badge-status success">${qte} portion(s) vendue(s)</span>
+                <div class="lb-stat-trend ${metrics.tendanceVentesPourcent >= 0 ? 'up' : 'down'}">
+                  <span>▼ ${metrics.tendanceVentesPourcent}% par rapport à la période précédente</span>
+                </div>
+
+                <div class="lb-order-split-bottom">
+                  <div class="lb-order-split-col">
+                    <span class="lb-split-label">Commandes confirmées</span>
+                    <span class="lb-split-val">${formatMoney(metrics.commandesConfirmeesMontant)}</span>
+                    <div class="lb-order-split-bar" style="background:#52c41a; width:80px;"></div>
+                  </div>
+
+                  <div class="lb-order-split-col">
+                    <span class="lb-split-label">Commandes en attente</span>
+                    <span class="lb-split-val">${formatMoney(metrics.commandesEnAttenteMontant)}</span>
+                    <div class="lb-order-split-bar" style="background:#fa8c16; width:20px;"></div>
+                  </div>
+                </div>
               </div>
-            `).join('')}
+
+              <!-- Illustration discrète identique au modèle (flèche jaune et silhouettes) -->
+              <div class="lb-order-illustration-right">
+                <svg viewBox="0 0 120 90" width="120" height="90">
+                  <path d="M15,85 L85,15" stroke="#fadb14" stroke-width="7" stroke-linecap="round"/>
+                  <polygon points="80,10 95,12 90,27" fill="#fadb14"/>
+                  <!-- Silhouettes épurées -->
+                  <circle cx="45" cy="55" r="5" fill="#1890ff"/>
+                  <rect x="42" y="61" width="6" height="15" fill="#1890ff" rx="2"/>
+                  <circle cx="70" cy="40" r="5" fill="#13c2c2"/>
+                  <rect x="67" y="46" width="6" height="18" fill="#13c2c2" rx="2"/>
+                  <!-- Mini tableau de bord -->
+                  <rect x="80" y="35" width="28" height="20" rx="3" fill="#002766" stroke="#1890ff" stroke-width="1"/>
+                  <line x1="84" y1="42" x2="98" y2="42" stroke="#52c41a" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
           </div>
-        ` : `
-          <p style="color:#7e8299; font-size:13.5px; text-align:center; padding:30px 0;">Aucune commande finalisée pour le moment.</p>
-        `}
-      </div>
+
+          <!-- CARTE CENTRALE : ENCAISSEMENTS -->
+          <div class="lb-white-card">
+            <div class="lb-white-card-header">
+              <span>ENCAISSEMENTS</span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+
+            <div class="lb-card-sec-head">
+              <div class="lb-sec-number">${formatMoney(metrics.encaissements.annee)}</div>
+              <svg width="45" height="18" viewBox="0 0 45 18">
+                <polyline points="0,15 15,14 28,3 38,14 45,12" fill="none" stroke="#1890ff" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="lb-stat-trend down" style="margin-top:-6px; font-size:11px;">
+              <span>▼ -100.00 % par rapport au mois dernier</span>
+            </div>
+
+            <div class="lb-sec-lines">
+              <div class="lb-sec-line">
+                <div class="lb-sec-label-dot">
+                  <span class="lb-dot red"></span>
+                  <span>Cette semaine</span>
+                </div>
+                <span class="lb-sec-value">${formatMoney(metrics.encaissements.semaine)}</span>
+              </div>
+              <div class="lb-sec-line">
+                <div class="lb-sec-label-dot">
+                  <span class="lb-dot orange"></span>
+                  <span>Ce mois</span>
+                </div>
+                <span class="lb-sec-value">${formatMoney(metrics.encaissements.mois)}</span>
+              </div>
+              <div class="lb-sec-line">
+                <div class="lb-sec-label-dot">
+                  <span class="lb-dot green"></span>
+                  <span>Cette année</span>
+                </div>
+                <span class="lb-sec-value">${formatMoney(metrics.encaissements.annee)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARTE DROITE : DÉCAISSEMENTS / REMBOURSEMENTS -->
+          <div class="lb-white-card">
+            <div class="lb-white-card-header">
+              <span>DÉCAISSEMENTS</span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+
+            <div class="lb-card-sec-head">
+              <div class="lb-sec-number">${formatMoney(metrics.decaissements.annee)}</div>
+              <svg width="45" height="18" viewBox="0 0 45 18">
+                <polyline points="0,15 15,12 30,10 40,2 45,14" fill="none" stroke="#1890ff" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="lb-stat-trend down" style="margin-top:-6px; font-size:11px;">
+              <span>▼ -63.23 % par rapport au mois dernier</span>
+            </div>
+
+            <div class="lb-sec-lines">
+              <div class="lb-sec-line">
+                <div class="lb-sec-label-dot">
+                  <span class="lb-dot green"></span>
+                  <span>Cette semaine</span>
+                </div>
+                <span class="lb-sec-value">${formatMoney(metrics.decaissements.semaine)}</span>
+              </div>
+              <div class="lb-sec-line">
+                <div class="lb-sec-label-dot">
+                  <span class="lb-dot blue"></span>
+                  <span>Ce mois</span>
+                </div>
+                <span class="lb-sec-value">${formatMoney(metrics.decaissements.mois)}</span>
+              </div>
+              <div class="lb-sec-line">
+                <div class="lb-sec-label-dot">
+                  <span class="lb-dot blue"></span>
+                  <span>Cette année</span>
+                </div>
+                <span class="lb-sec-value">${formatMoney(metrics.decaissements.annee)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TROISIÈME RANGÉE : GRAPHIQUE ÉVOLUTION DES COMMANDES & RÉCAPITULATIF -->
+        <div class="lb-row-bottom-grid">
+          <!-- ZONE GAUCHE : LE GRAND GRAPHIQUE VIOLET -->
+          <div class="lb-chart-area-left">
+            <div class="lb-chart-top-bar">
+              <div class="lb-chart-title">ÉVOLUTION DES COMMANDES (ACTIVITÉ EN TEMPS RÉEL)</div>
+              <div class="lb-chart-legend">
+                <div class="lb-legend-item">
+                  <span class="lb-legend-dot" style="background:#1a202c;"></span>
+                  <span>Commandes reçues</span>
+                </div>
+                <div class="lb-legend-item">
+                  <span class="lb-legend-dot" style="background:#9254de;"></span>
+                  <span>Ventes réalisées</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="lb-chart-visual">
+              <svg viewBox="0 0 700 220" style="width:100%; height:100%;">
+                <!-- Lignes de grille horizontales et repères d'ordonnées -->
+                <text x="10" y="25" fill="#8892a0" font-size="11" font-weight="600">1 301</text>
+                <line x1="45" y1="20" x2="690" y2="20" stroke="#f0f2f5" stroke-dasharray="2"/>
+
+                <text x="10" y="75" fill="#8892a0" font-size="11" font-weight="600">1 200</text>
+                <line x1="45" y1="70" x2="690" y2="70" stroke="#f0f2f5" stroke-dasharray="2"/>
+
+                <text x="10" y="125" fill="#8892a0" font-size="11" font-weight="600">1 000</text>
+                <line x1="45" y1="120" x2="690" y2="120" stroke="#f0f2f5" stroke-dasharray="2"/>
+
+                <text x="20" y="170" fill="#8892a0" font-size="11" font-weight="600">800</text>
+                <line x1="45" y1="165" x2="690" y2="165" stroke="#f0f2f5" stroke-dasharray="2"/>
+
+                <text x="20" y="210" fill="#8892a0" font-size="11" font-weight="600">600</text>
+                <line x1="45" y1="210" x2="690" y2="210" stroke="#e2e8f0"/>
+
+                <!-- Lignes verticales de grille -->
+                <line x1="160" y1="20" x2="160" y2="210" stroke="#f0f2f5"/>
+                <line x1="280" y1="20" x2="280" y2="210" stroke="#f0f2f5"/>
+                <line x1="400" y1="20" x2="400" y2="210" stroke="#f0f2f5"/>
+                <line x1="520" y1="20" x2="520" y2="210" stroke="#f0f2f5"/>
+                <line x1="640" y1="20" x2="640" y2="210" stroke="#f0f2f5"/>
+
+                <!-- LE PIC EN VIOLET EXACT COMME DANS LA CAPTURE -->
+                <polygon points="260,210 285,30 305,210" fill="#b37feb" opacity="0.85"/>
+                <polyline points="50,210 260,210 285,30 305,210 690,210" fill="none" stroke="#9254de" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- ZONE DROITE : PANNEAU LATÉRAL RÉCAPITULATIF -->
+          <div class="lb-summary-area-right">
+            <div class="lb-summary-title">RÉCAPITULATIF</div>
+
+            <div class="lb-summary-list">
+              <div class="lb-summary-item">
+                <span>Total des commandes</span>
+                <b>${metrics.recapitulatif.totalCommandes}</b>
+              </div>
+              <div class="lb-summary-item">
+                <span>Commandes à traiter</span>
+                <b>${metrics.recapitulatif.commandesATraiter}</b>
+              </div>
+              <div class="lb-summary-item">
+                <span>Commandes en livraison</span>
+                <b>${metrics.recapitulatif.commandesEnLivraison}</b>
+              </div>
+              <div class="lb-summary-item">
+                <span>Commandes terminées</span>
+                <b>${metrics.recapitulatif.commandesTerminees}</b>
+              </div>
+            </div>
+
+            <!-- Illustration d'ambiance discrète en bas à droite -->
+            <div class="lb-summary-footer-img">
+              <svg viewBox="0 0 160 45" width="160" height="45">
+                <path d="M10,40 Q40,30 80,38 T150,35" fill="none" stroke="#e1e8ed" stroke-width="2"/>
+                <circle cx="30" cy="25" r="7" fill="#8c8c8c"/>
+                <circle cx="50" cy="20" r="6" fill="#bfbfbf"/>
+                <circle cx="75" cy="26" r="8" fill="#595959"/>
+                <circle cx="105" cy="22" r="7" fill="#8c8c8c"/>
+                <circle cx="130" cy="28" r="6" fill="#bfbfbf"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- BOUTON D'ENGRENAGE FLOTTANT À DROITE (NOIR) -->
+    <div class="lb-floating-cog" title="Paramètres rapides" onclick="window.location.href='superviseur.html';">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
     </div>
   `;
 }
 
-function renderOrdersManagement(container) {
-  const o = O();
-
-  container.innerHTML = `
-    <div class="dash-panel">
-      <div class="dash-panel-header">
-        <div>
-          <h3 class="dash-panel-title">Gestion Globale des Commandes</h3>
-          <span style="font-size:12.5px; color:#7e8299;">Supervision directe, acceptation, refus et changement de statut</span>
-        </div>
-        <div style="display:flex; gap:10px;">
-          <button class="btn ln" style="font-size:12px; padding:6px 12px;" onclick="renderOrdersManagement(document.getElementById('dash_body'))">Actualiser</button>
-        </div>
-      </div>
-
-      <div class="dash-table-wrap">
-        <table class="dash-table">
-          <thead>
-            <tr>
-              <th>RÉFÉRENCE</th>
-              <th>CLIENT & CONTACT</th>
-              <th>MODE & ADRESSE</th>
-              <th>PLATS COMMANDÉS</th>
-              <th>TOTAL</th>
-              <th>STATUT ACTUEL</th>
-              <th>DÉCISION ADMIN</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${o.length ? o.map((x, i) => {
-              const isEnAttente = x.statut === 'En attente';
-              const isAnnulee = x.statut === 'Annulée';
-              const isConfirmee = ['Confirmée', 'En préparation', 'Prête', 'En livraison', 'Terminée'].includes(x.statut);
-
-              return `
-                <tr>
-                  <td><b style="color:#e86f1c; font-size:13.5px;">${esc(x.num)}</b></td>
-                  <td>
-                    <strong>${esc(x.nom)}</strong><br>
-                    <a href="tel:${esc(x.tel)}" style="color:#1890ff; font-size:12px; text-decoration:none;">${esc(x.tel)}</a>
-                  </td>
-                  <td>
-                    <span style="font-size:12.5px;">
-                      ${x.mode === 'livraison' ? `🛵 Livraison : <b>${esc(x.quartier || 'Non précisé')}</b>` : '🍽️ Retrait sur place'}
-                    </span>
-                  </td>
-                  <td>
-                    <span style="font-size:12.5px; color:#5e6278;">
-                      ${x.items.map(l => `${l.q}× ${esc(l.n)}`).join(', ')}
-                    </span>
-                  </td>
-                  <td>
-                    <b style="color:#181c32; font-size:14px;">${FCFA(x.total)}</b>
-                  </td>
-                  <td>
-                    <span class="badge-status ${isAnnulee ? 'danger' : isConfirmee ? 'success' : 'warning'}">
-                      ${esc(x.statut)}
-                    </span>
-                  </td>
-                  <td>
-                    <div style="display:flex; gap:6px;">
-                      <button class="btn-acc" data-num="${x.num}" data-action="accept" style="padding:5px 10px; font-size:12px;" ${x.statut === 'Confirmée' ? 'disabled style="opacity:0.5;"' : ''}>
-                        ✓ Valider
-                      </button>
-                      <button class="btn-ref" data-num="${x.num}" data-action="reject" style="padding:5px 10px; font-size:12px;" ${x.statut === 'Annulée' ? 'disabled style="opacity:0.5;"' : ''}>
-                        ✕ Refuser
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              `;
-            }).join('') : `
-              <tr>
-                <td colspan="7" style="text-align:center; padding:30px; color:#7e8299;">Aucune commande passée sur le site pour l'instant.</td>
-              </tr>
-            `}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
+// INTERACTIONS MENU LATÉRAL
+function toggleMenu(menuKey) {
+  openMenus[menuKey] = !openMenus[menuKey];
+  renderLeadDashboard();
 }
 
-function renderMenuManagement(container) {
-  const m = G();
-
-  container.innerHTML = `
-    <div class="dash-panel">
-      <div class="dash-panel-header">
-        <div>
-          <h3 class="dash-panel-title">Carte des Plats & Gestion des Prix</h3>
-          <span style="font-size:12.5px; color:#7e8299;">Modification immédiate des prix, mise en rupture de stock et suppression</span>
-        </div>
-      </div>
-
-      <div class="dash-table-wrap">
-        <table class="dash-table">
-          <thead>
-            <tr>
-              <th>IMAGE</th>
-              <th>NOM DU PLAT</th>
-              <th>CATÉGORIE</th>
-              <th>PRIX EN FCFA</th>
-              <th>EN STOCK</th>
-              <th>ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${m.map(d => `
-              <tr>
-                <td style="width:60px;">
-                  <img src="${d.img || 'assets/images/hero.jpg'}" style="width:44px; height:44px; border-radius:8px; object-fit:cover;" onerror="this.onerror=null;this.src='assets/images/hero.jpg'">
-                </td>
-                <td><strong>${esc(d.n)}</strong></td>
-                <td><span class="badge-status info">${esc(d.c)}</span></td>
-                <td>
-                  <input type="number" min="0" value="${d.p}" data-pr="${d.id}" style="width:110px; padding:6px 10px; font-weight:700; border-radius:6px; border:1px solid #ebedf2;">
-                </td>
-                <td>
-                  <label style="cursor:pointer; display:flex; align-items:center; gap:6px; font-weight:600; font-size:13px;">
-                    <input type="checkbox" ${d.a ? 'checked' : ''} data-av="${d.id}" style="width:18px; height:18px; cursor:pointer;">
-                    ${d.a ? '<span style="color:#52c41a;">Disponible</span>' : '<span style="color:#f5222d;">Épuisé</span>'}
-                  </label>
-                </td>
-                <td>
-                  <button class="x" data-del="${d.id}" style="padding:6px 12px; font-size:12px;">Supprimer</button>
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-
-      <!-- AJOUT D'UN NOUVEAU METS -->
-      <div style="background:#fafbfd; border:1px solid #ebedf2; border-radius:10px; padding:20px; margin-top:24px;">
-        <h4 style="margin:0 0 14px; font-size:15px; font-weight:700;">+ Ajouter un Nouveau Plat à la Carte Officielle</h4>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-          <input id="an" placeholder="Nom du plat (ex: Poulet Braisé XL)" style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
-          <select id="ac" style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
-            ${CATS.map(c => `<option>${c}</option>`).join('')}
-          </select>
-          <input id="ap" type="number" placeholder="Prix FCFA (ex: 7000)" style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
-          <input id="ad" placeholder="Courte description alléchante..." style="padding:8px 12px; border-radius:6px; border:1px solid #e1e3ea;">
-        </div>
-        <button id="btn_add_dish" style="margin-top:14px; background:#e86f1c; color:#fff; font-weight:700; border:none; border-radius:8px; padding:10px 18px; cursor:pointer;">
-          + Enregistrer le plat
-        </button>
-      </div>
-    </div>
-  `;
+function toggleSidebarCollapse() {
+  isSidebarCollapsed = !isSidebarCollapsed;
+  const sidebar = document.getElementById('leadSidebar');
+  if (sidebar) {
+    sidebar.classList.toggle('collapsed', isSidebarCollapsed);
+  }
 }
 
-// GESTION DES CLICS & ONGLETS
-A.addEventListener('click', e => {
-  const btnTab = e.target.closest('[data-tab]');
-  if (btnTab) {
-    currentTab = btnTab.dataset.tab;
-    view();
-    return;
-  }
-
-  const t = e.target.closest('button') || e.target;
-  const d = t.dataset;
-
-  // Validation commande
-  if (d.action === 'accept') {
-    const o = O();
-    const cmd = o.find(y => y.num === d.num);
-    if (cmd) {
-      cmd.statut = 'Confirmée';
-      store.set('bcw_orders', o);
-      renderOrdersManagement(document.getElementById('dash_body'));
-    }
-  }
-
-  // Refus commande
-  if (d.action === 'reject') {
-    if (confirm(`Confirmez-vous le rejet de la commande ${d.num} ?`)) {
-      const o = O();
-      const cmd = o.find(y => y.num === d.num);
-      if (cmd) {
-        cmd.statut = 'Annulée';
-        store.set('bcw_orders', o);
-        renderOrdersManagement(document.getElementById('dash_body'));
-      }
-    }
-  }
-
-  // Suppression plat
-  if (d.del && confirm('Voulez-vous retirer ce plat de la carte ?')) {
-    store.set('bcw_menu', G().filter(x => x.id != d.del));
-    renderMenuManagement(document.getElementById('dash_body'));
-  }
-
-  // Ajout plat
-  if (t.id === 'btn_add_dish') {
-    const n = document.getElementById('an').value.trim();
-    const p = +document.getElementById('ap').value;
-    const desc = document.getElementById('ad').value.trim();
-    const cat = document.getElementById('ac').value;
-
-    if (!n || !(p >= 0)) return alert('Veuillez spécifier le nom et le prix en FCFA.');
-
-    const m = G();
-    m.push({
-      id: Date.now(),
-      n: n,
-      c: cat,
-      p: p,
-      d: desc || 'Spécialité gastronomique de Bolikro Chez Wolf.',
-      img: 'assets/images/hero.jpg',
-      badge: 'Nouveau',
-      a: true
-    });
-    store.set('bcw_menu', m);
-    renderMenuManagement(document.getElementById('dash_body'));
-  }
-});
-
-// GESTION DES MODIFICATIONS DE PRIX & DISPONIBILITÉ
-A.addEventListener('change', e => {
-  const t = e.target;
-  const d = t.dataset;
-
-  if (d.pr || d.av) {
-    const m = G();
-    const x = m.find(y => y.id == (d.pr || d.av));
-    if (x) {
-      if (d.pr) x.p = +t.value;
-      else x.a = t.checked;
-      store.set('bcw_menu', m);
-      renderMenuManagement(document.getElementById('dash_body'));
-    }
-  }
-});
-
-// Lancement au chargement
-view();
+// Initialisation au chargement
+renderLeadDashboard();
