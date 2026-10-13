@@ -1,10 +1,12 @@
 /**
- * BOLIKRO CHEZ WOLF — Console Superviseur (Cuisine & Gestion Commandes)
+ * BOLIKRO CHEZ WOLF — Console Superviseur (Cuisine, Commandes & Carte des Plats)
  * Fichier dédié : superviseur.html / superviseur.js
  */
 
 const A = document.getElementById('app');
+let tab = 'o'; // 'o' (commandes), 'm' (carte des plats)
 const O = () => store.get('bcw_orders', []);
+const G = () => store.get('bcw_menu', DEF);
 const B = () => document.getElementById('b');
 
 const sel = (l, v, k, i) => `
@@ -19,7 +21,7 @@ function login() {
       <div style="text-align:center; margin-bottom:20px;">
         <img src="assets/images/logo.png" style="width:72px; height:72px; border-radius:50%; margin:auto; background:#FFF; padding:2px; border:2px solid var(--gold);" onerror="this.onerror=null;this.src='Logo.png'">
         <h1 style="font-size:24px; margin-top:12px; font-family:var(--f1);">Espace Superviseur</h1>
-        <p style="font-size:13.5px; color:var(--mu); margin-top:4px;">Bolikro Chez Wolf — Cuisine & Commandes</p>
+        <p style="font-size:13.5px; color:var(--mu); margin-top:4px;">Bolikro Chez Wolf — Cuisine & Opérations</p>
       </div>
 
       <div style="background:var(--iv); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:18px; font-size:13px; text-align:center;">
@@ -57,6 +59,7 @@ function login() {
 function view() {
   if (!sessionStorage.getItem('sup_auth')) return login();
   const o = O();
+  const m = G();
 
   A.innerHTML = `
     <div class="row" style="margin-bottom:20px; flex-wrap:wrap; gap:16px;">
@@ -65,9 +68,9 @@ function view() {
         <div>
           <div style="display:flex; align-items:center; gap:10px;">
             <h1 style="font-size:24px; margin:0; font-family:var(--f1);">Console Superviseur</h1>
-            <span class="badge-role superviseur">🛡️ Superviseur Cuisine</span>
+            <span class="badge-role superviseur">🛡️ Opérations & Cuisine</span>
           </div>
-          <span style="font-size:13px; color:var(--mu);">Validation, acceptation, refus et suivi de préparation des commandes</span>
+          <span style="font-size:13px; color:var(--mu);">Acceptation / Refus des commandes et gestion des plats & stocks</span>
         </div>
       </div>
       <div style="display:flex; gap:10px; align-items:center; margin-left:auto;">
@@ -77,6 +80,29 @@ function view() {
       </div>
     </div>
 
+    <!-- Onglets Superviseur -->
+    <div class="at" style="flex-wrap:wrap;">
+      <button data-t="o" aria-pressed="${tab === 'o'}" style="display:inline-flex; align-items:center; gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 18l4-4h-3V9h-2v5H8z"/></svg>
+        <span>Commandes (${o.length})</span>
+      </button>
+
+      <button data-t="m" aria-pressed="${tab === 'm'}" style="display:inline-flex; align-items:center; gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
+        <span>Carte & Nouveaux Plats (${m.length})</span>
+      </button>
+    </div>
+
+    <div id="b"></div>
+  `;
+
+  if (tab === 'm') dishes();
+  else orders();
+}
+
+function orders() {
+  const o = O();
+  B().innerHTML = `
     <!-- Filtres rapides -->
     <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
       <button class="btn-status-act" data-filter="all" style="font-weight:700;">Toutes (${o.length})</button>
@@ -84,20 +110,21 @@ function view() {
       <button class="btn-status-act" data-filter="cours" style="background:#e8f5e9; color:#2e7d32; border-color:#c8e6c9; font-weight:700;">En cours (${o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut)).length})</button>
       <button class="btn-status-act" data-filter="refus" style="background:#ffebee; color:#c62828; border-color:#ffcdd2; font-weight:700;">Refusées (${o.filter(x => x.statut === 'Annulée').length})</button>
     </div>
-
-    <div id="b"></div>
+    <div id="orders-list"></div>
   `;
-
-  renderOrders('all');
+  renderOrderList('all');
 }
 
-function renderOrders(filter = 'all') {
+function renderOrderList(filter = 'all') {
   let o = O();
   if (filter === 'attente') o = o.filter(x => x.statut === 'En attente');
   if (filter === 'cours') o = o.filter(x => ['Confirmée', 'En préparation', 'Prête', 'En livraison'].includes(x.statut));
   if (filter === 'refus') o = o.filter(x => x.statut === 'Annulée');
 
-  B().innerHTML = o.length ? o.map((x, i) => {
+  const listEl = document.getElementById('orders-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = o.length ? o.map((x, i) => {
     const isEnAttente = x.statut === 'En attente';
     const isAnnulee = x.statut === 'Annulée';
     const isConfirmee = ['Confirmée', 'En préparation', 'Prête', 'En livraison', 'Terminée'].includes(x.statut);
@@ -139,7 +166,7 @@ function renderOrders(filter = 'all') {
 
         <!-- Décision Superviseur : Accepter / Refuser -->
         <div style="background:#FBF8F1; padding:12px 14px; border-radius:8px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-          <span style="font-size:13.5px; font-weight:700;">Action Superviseur :</span>
+          <span style="font-size:13.5px; font-weight:700;">Décision Superviseur :</span>
           <div style="display:flex; gap:10px; align-items:center;">
             <button class="btn-acc" data-num="${x.num}" data-action="accept" ${x.statut === 'Confirmée' ? 'disabled style="opacity:0.6; cursor:default;"' : ''}>
               ✓ Accepter la commande
@@ -162,32 +189,89 @@ function renderOrders(filter = 'all') {
         </div>
       </div>
     `;
-  }).join('') : '<p class="empty">Aucune commande dans cette catégorie pour le moment.</p>';
+  }).join('') : '<p class="empty">Aucune commande dans cette sélection pour le moment.</p>';
+}
+
+function dishes() {
+  const m = G();
+  B().innerHTML = `
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Plat</th>
+          <th>Catégorie</th>
+          <th>Prix FCFA</th>
+          <th style="text-align:center;">En Stock</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${m.map(d => `
+          <tr>
+            <td style="width:50px;">
+              <img src="${d.img || 'assets/images/hero.jpg'}" style="width:42px; height:42px; border-radius:6px; object-fit:cover;" onerror="this.onerror=null;this.src='assets/images/hero.jpg'">
+            </td>
+            <td><strong>${esc(d.n)}</strong></td>
+            <td><span class="pill" style="font-size:12px;">${esc(d.c)}</span></td>
+            <td style="width:130px;">
+              <input type="number" min="0" value="${d.p}" data-pr="${d.id}" style="width:110px; font-weight:700;">
+            </td>
+            <td style="text-align:center; width:90px;">
+              <input type="checkbox" ${d.a ? 'checked' : ''} data-av="${d.id}" style="width:22px; height:22px; cursor:pointer;">
+            </td>
+            <td style="text-align:right;">
+              <button class="x" data-del="${d.id}">Retirer</button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+
+    <div class="oc" style="margin-top:20px;">
+      <h3>+ Ajouter un Nouveau Plat au Menu (Superviseur)</h3>
+      <div class="g" style="margin-top:10px;">
+        <input id="an" placeholder="Nom du plat (ex: Demi Poulet Braisé)">
+        <select id="ac">
+          ${CATS.map(c => `<option>${c}</option>`).join('')}
+        </select>
+        <input id="ap" type="number" placeholder="Prix en FCFA (ex: 4500)">
+        <input id="ad" placeholder="Courte description alléchante...">
+      </div>
+      <button class="btn dk" id="add" style="margin-top:14px;">+ Ajouter le plat à la carte</button>
+    </div>
+  `;
 }
 
 A.addEventListener('click', e => {
   const t = e.target.closest('button') || e.target;
   const d = t.dataset;
 
-  // Filtre
+  // Changement d'onglet
+  if (d.t) {
+    tab = d.t;
+    view();
+  }
+
+  // Filtre commandes
   if (d.filter) {
     document.querySelectorAll('.btn-status-act').forEach(b => b.style.outline = 'none');
     t.style.outline = '2px solid var(--or)';
-    renderOrders(d.filter);
+    renderOrderList(d.filter);
   }
 
-  // Accepter
+  // Accepter commande
   if (d.action === 'accept') {
     const o = O();
     const cmd = o.find(y => y.num === d.num);
     if (cmd) {
       cmd.statut = 'Confirmée';
       store.set('bcw_orders', o);
-      view();
+      orders();
     }
   }
 
-  // Refuser
+  // Refuser commande
   if (d.action === 'reject') {
     if (confirm(`Confirmez-vous le REFUS de la commande ${d.num} ?`)) {
       const o = O();
@@ -195,9 +279,39 @@ A.addEventListener('click', e => {
       if (cmd) {
         cmd.statut = 'Annulée';
         store.set('bcw_orders', o);
-        view();
+        orders();
       }
     }
+  }
+
+  // Supprimer plat de la carte
+  if (d.del && confirm('Êtes-vous sûr de vouloir retirer ce plat du menu ?')) {
+    store.set('bcw_menu', G().filter(x => x.id != d.del));
+    dishes();
+  }
+
+  // Ajouter un plat à la carte
+  if (t.id === 'add') {
+    const n = document.getElementById('an').value.trim();
+    const p = +document.getElementById('ap').value;
+    const desc = document.getElementById('ad').value.trim();
+    const cat = document.getElementById('ac').value;
+
+    if (!n || !(p >= 0)) return alert('Le nom et le prix en FCFA sont obligatoires.');
+
+    const m = G();
+    m.push({
+      id: Date.now(),
+      n: n,
+      c: cat,
+      p: p,
+      d: desc || 'Préparation artisanale aux saveurs de Côte d\'Ivoire.',
+      img: 'assets/images/hero.jpg',
+      badge: 'Nouveau',
+      a: true
+    });
+    store.set('bcw_menu', m);
+    dishes();
   }
 });
 
@@ -209,6 +323,16 @@ A.addEventListener('change', e => {
     const o = O();
     o[d.i][d.k] = t.value;
     store.set('bcw_orders', o);
+  }
+
+  if (d.pr || d.av) {
+    const m = G();
+    const x = m.find(y => y.id == (d.pr || d.av));
+    if (x) {
+      if (d.pr) x.p = +t.value;
+      else x.a = t.checked;
+      store.set('bcw_menu', m);
+    }
   }
 });
 

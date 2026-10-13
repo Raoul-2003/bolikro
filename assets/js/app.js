@@ -8,12 +8,13 @@ let cat = 'Tous';
 let step = 1;
 let mode = 'livraison';
 
-/* Synchronisation immédiate avec le menu officiel officiel (22 plats) */
-store.set('bcw_menu', DEF);
-store.set('bcw_menu_ver', 'v6-strictly-official-22-dishes');
+/* Synchronisation avec le menu stocké ou par défaut (22 plats) */
+if (!store.get('bcw_menu')) {
+  store.set('bcw_menu', DEF);
+}
 
-const menu = () => DEF;
-const find = id => DEF.find(d => d.id == id);
+const menu = () => store.get('bcw_menu', DEF);
+const find = id => menu().find(d => d.id == id);
 
 const toast = m => {
   let t = $('#toast');
