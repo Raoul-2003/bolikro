@@ -1275,6 +1275,126 @@ input:focus, select:focus, textarea:focus {
   min-height: 40px;
 }
 
+/* Dashboard Statistics & Badges */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #FFF;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--or);
+}
+
+.stat-card.green::after { background: #2e7d32; }
+.stat-card.blue::after { background: #1565c0; }
+.stat-card.red::after { background: #c62828; }
+.stat-card.gold::after { background: var(--gold); }
+
+.stat-card .val {
+  font-size: 26px;
+  font-weight: 800;
+  font-family: var(--f1);
+  color: var(--ink);
+  margin-top: 6px;
+}
+
+.stat-card .lbl {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--mu);
+  font-weight: 700;
+}
+
+.badge-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-role.admin {
+  background: #ffe0b2;
+  color: #b74b00;
+  border: 1px solid #ffb74d;
+}
+
+.badge-role.superviseur {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+
+.btn-acc {
+  background: #2e7d32;
+  color: #FFF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.btn-acc:hover { background: #1b5e20; }
+
+.btn-ref {
+  background: #c62828;
+  color: #FFF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.btn-ref:hover { background: #8e0000; }
+
+.btn-status-act {
+  background: #E8DCCB;
+  color: var(--tx);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-status-act:hover {
+  background: var(--or);
+  color: #FFF;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 860px) {
   #burger { display: grid; }

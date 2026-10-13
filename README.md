@@ -45,7 +45,12 @@ bolikro/
      3. Validation et choix du mode de paiement.
    - Module de suivi de commande en direct avec numéro de référence (ex: `BCW-XXXXX`).
 
-2. **Espace Cuisine & Staff ([admin.html](admin.html))** :
-   - Authentification sécurisée (mot de passe test : `wolf`).
-   - Gestion des commandes en direct (mise à jour du statut de préparation et de paiement synchronisée avec le suivi client).
-   - Gestion de la carte (activation/désactivation des stocks, mise à jour des prix en FCFA, ajout de nouveaux plats).
+2. **Espace Staff : Superviseur & Administrateur ([admin.html](admin.html))** :
+   - **Profil Superviseur** (mot de passe : `wolf`) :
+     - Consultation des commandes en temps réel.
+     - Boutons d'action rapide pour **Accepter** ou **Refuser / Annuler** les commandes.
+     - Suivi de la préparation pour la cuisine.
+   - **Profil Administrateur** (mot de passe : `admin2026`) :
+     - Accès total et œil sur l'ensemble de l'activité.
+     - **Tableau de bord statistique complet** : Chiffre d'affaires total en FCFA, volume de commandes, répartition livraisons/sur place, taux de validation, classement des plats les plus vendus.
+     - Gestion complète de la carte (tarifs en FCFA, rupture de stock, ajout/suppression de plats).
