@@ -87,16 +87,14 @@ function renderAdminDashboard() {
   const allMenu = store.get('bcw_menu', DEF);
 
   App.innerHTML = `
-    <!-- TOPBAR BLANCHE CONFORME À LA CAPTURE -->
+    <!-- TOPBAR BLANCHE CONFORME À LA CHARTE BOLIKRO -->
     <header class="lb-topbar">
       <div class="lb-topbar-brand">
         <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-          <div class="lb-brand-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          </div>
+          <img src="assets/images/logo.png" alt="Bolikro Chez Wolf" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid var(--or, #E86F1C); background:#fff; padding:1px;" onerror="this.onerror=null;this.src='Logo.png'">
           <div class="lb-brand-text">
-            <span>BOLIKRO</span>
-            <span class="lb-brand-sub">CHEZ WOLF</span>
+            <span style="color:var(--ink, #3A0D0D); font-weight:800; letter-spacing:0.5px;">BOLIKRO</span>
+            <span class="lb-brand-sub" style="color:var(--or, #E86F1C); font-weight:700;">CHEZ WOLF</span>
           </div>
         </a>
       </div>
@@ -123,16 +121,16 @@ function renderAdminDashboard() {
 
         <!-- Sélecteur Devise FCFA -->
         <div class="lb-top-selector" title="Devise monétaire">
-          <span>FCFA</span>
+          <span style="font-weight:700; color:var(--or, #E86F1C);">FCFA</span>
           <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
         </div>
 
         <!-- Profil Administrateur Dropdown -->
         <div class="lb-admin-dropdown" onclick="handleAdminMenuClick()">
           <div class="lb-admin-avatar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#6a7485"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <img src="assets/images/chef_face_crop.jpg" alt="Chef Wolf" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.onerror=null;this.src='assets/images/logo.png'">
           </div>
-          <span class="lb-admin-name">Admin</span>
+          <span class="lb-admin-name">Admin (Wolf)</span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="#707b8b"><path d="M7 10l5 5 5-5z"/></svg>
         </div>
       </div>
@@ -143,11 +141,12 @@ function renderAdminDashboard() {
       <aside class="lb-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}" id="leadSidebar">
         <div class="lb-sidebar-header">
           <div class="lb-sidebar-user-block">
-            <div class="lb-user-photo-box">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#8e99a8"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <div class="lb-user-photo-box" style="border:1.5px solid var(--or, #E86F1C);">
+              <img src="assets/images/chef_face_crop.jpg" alt="Chef Wolf" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null;this.src='assets/images/logo.png'">
             </div>
             <div class="lb-sidebar-user-info">
-              <span class="lb-sidebar-user-name">Admin (Wolf)</span>
+              <span class="lb-sidebar-user-name">Chef Wolf</span>
+              <span style="font-size:11px; color:var(--gold, #E5A83B); font-weight:700;">ADMINISTRATEUR</span>
             </div>
           </div>
           <div class="lb-sidebar-date">

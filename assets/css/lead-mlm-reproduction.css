@@ -12,6 +12,14 @@
    ========================================================================== */
 
 :root {
+  /* Charte Graphique Officielle Bolikro Chez Wolf */
+  --ink: #3A0D0D;            /* Marron chocolat signature */
+  --or: #E86F1C;             /* Orange braisé vif */
+  --or2: #C75B10;            /* Orange soutenu */
+  --gold: #E5A83B;           /* Ambre dorée */
+  --lf: #287A42;             /* Vert feuille du logo */
+  --iv: #FBF8F1;             /* Ivoire crème très doux */
+
   --lb-sidebar-bg: #1c1f26;
   --lb-sidebar-header-bg: #15181e;
   --lb-sidebar-text: #8e99a8;
