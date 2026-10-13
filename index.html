@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bolikro Chez Wolf · Restaurant Gastronomique Ivoirien — Yamoussoukro</title>
+  <meta name="description" content="Restaurant Bolikro Chez Wolf à Yamoussoukro, Côte d'Ivoire. Cuisine ivoirienne authentique : cabri braisé, poulet africain, carpe braisée, agouti sauté. Ambiance naturelle et conviviale, comme au village.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,600..900&display=swap" rel="stylesheet">
+  
+  <link rel="icon" href="assets/images/logo.png">
+  <link rel="stylesheet" href="assets/css/style.css?v=14">
+</head>
+<body>
+
+  <!-- =========================================================================
+       NAVIGATION BAR
+       ========================================================================= -->
+  <header class="nav">
+    <a class="brand" href="#accueil" title="Bolikro Chez Wolf">
+      <img src="assets/images/logo.png" alt="Logo Bolikro Chez Wolf">
+      <div class="brand-text">
+        <span class="brand-title">BOLIKRO</span>
+        <span class="brand-sub">Chez Wolf</span>
+      </div>
+    </a>
+
+    <nav id="nav-links" aria-label="Navigation principale">
+      <a href="#accueil">Accueil</a>
+      <a href="#menu">Notre menu</a>
+      <a href="#etapes">Comment commander</a>
+      <a href="#apropos">Le restaurant</a>
+      <a href="#suivi">Suivi</a>
+      <a href="#contact">Contact</a>
+      <a href="admin.html" style="color: var(--gold); font-weight: 700;">Staff Cuisine</a>
+    </nav>
+
+    <a class="btn" href="#menu">Commander</a>
+
+    <button class="cart" id="cartBtn" aria-label="Ouvrir le panier">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 4h3l2.5 11h9L20 7H7"/>
+        <circle cx="10" cy="20" r="1.5"/>
+        <circle cx="17" cy="20" r="1.5"/>
+      </svg>
+      <b id="cnt">0</b>
+    </button>
+
+    <button id="burger" aria-label="Menu Mobile">☰</button>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT
+       ========================================================================= -->
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="accueil">
+      <!-- Carrousel de fond -->
+      <div class="hero-carousel" aria-hidden="true">
+        <div class="hero-slide active" style="background-image:url('assets/images/hero_bolikro_affiche.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('assets/images/hero.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('assets/images/cabri.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('assets/images/carpe.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('assets/images/poulet.jpg')"></div>
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="wrap">
+        <div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(232,111,28,0.2); border:1px solid rgba(232,111,28,0.4); padding:6px 14px; border-radius:999px; font-size:0.85rem; font-weight:700; color:var(--gold); margin-bottom:16px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 23c-4.97 0-9-3.58-9-8 0-4.08 3.05-7.74 6.32-11.45C10 2.8 11.2 1.5 12 0c.8 1.5 2 2.8 2.68 3.55C17.95 7.26 21 10.92 21 15c0 4.42-4.03 8-9 8zm0-13c-2.33 2.67-4 4.88-4 6.75 0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.87-1.67-4.08-4-6.75z"/></svg>
+            <span>SPÉCIALITÉS : CABRI BRAISÉ & SAUTÉ • POULET AFRICAIN • AGOUTI • KÉDJÉNOUS</span>
+          </div>
+          <h1>
+            Bolikro <span>Chez Wolf</span>
+          </h1>
+          <p>
+            Spécialisé dans la cuisine ivoirienne, notre restaurant vous propose une large gamme de plats traditionnels et authentiques, préparés avec soin. Dégustez vos mets préférés dans un cadre naturel, convivial et chaleureux, <strong>sous les arbres, comme au village.</strong>
+          </p>
+          <div class="acts">
+            <a class="btn" href="#menu">Voir le menu & Commander</a>
+            <a class="btn ln" href="#apropos">Notre histoire</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION MENU -->
+    <section id="menu">
+      <div class="wrap">
+        <div class="sec-h">
+          <div>
+            <h2>Notre Menu Gastronomique</h2>
+            <p style="color:var(--mu); margin-top:6px; font-size:15px;">Cuisson minute au feu de bois et marinades aux épices nobles de Côte d'Ivoire.</p>
+          </div>
+          <div class="tabs" id="tabs" role="group" aria-label="Catégories du menu"></div>
+        </div>
+
+        <div class="grid" id="grid">
+          <!-- Injecté dynamiquement par app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 ÉTAPES -->
+    <section class="soft" id="etapes">
+      <div class="wrap">
+        <h2 style="font-size:clamp(30px,4vw,44px); text-align:center; margin-bottom:12px;">Commander en 4 Étapes Simples</h2>
+        <p style="text-align:center; color:var(--mu); max-width:60ch; margin:auto;">Une expérience pensée pour être aussi fluide que savoureuse, sur smartphone comme sur ordinateur.</p>
+
+        <ol class="steps">
+          <li>
+            <b>1. Choisissez vos plats</b>
+            Composez votre repas parmi nos braisés, sauces et accompagnements.
+          </li>
+          <li>
+            <b>2. Livraison ou Retrait</b>
+            Indiquez votre quartier à Abidjan ou venez récupérer directement au restaurant.
+          </li>
+          <li>
+            <b>3. Validez la commande</b>
+            Renseignez votre contact et réglez à la réception ou via Mobile Money.
+          </li>
+          <li>
+            <b>4. Suivez en temps réel</b>
+            Visualisez la préparation de vos plats grâce à votre code de suivi unique.
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- LE RESTAURANT / À PROPOS -->
+    <section id="apropos">
+      <div class="wrap two">
+        <div>
+          <span style="color:var(--or); font-weight:700; text-transform:uppercase; font-size:12px; letter-spacing:0.1em; display:block; margin-bottom:8px;">L'Âme de la Maison</span>
+          <h2 style="font-size:clamp(32px,4vw,48px); margin-bottom:18px;">Un Cadre Naturel, Comme au Village</h2>
+          <p style="color:var(--mu); font-size:16px; margin-bottom:16px;">
+            Spécialisé dans la cuisine ivoirienne, <strong style="color:var(--ink);">Bolikro Chez Wolf</strong> vous propose une large gamme de plats traditionnels et authentiques, préparés avec soin et amour du terroir.
+          </p>
+          <p style="color:var(--mu); font-size:16px; margin-bottom:20px;">
+            Dégustez vos mets préférés dans un cadre naturel, convivial et chaleureux, sous les arbres, dans une ambiance unique qui vous transporte directement au village.
+          </p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:14px; padding:14px; background:#FFF; border-radius:var(--r-sm); border:1px solid var(--border);">
+              <span class="contact-ico" style="background:var(--lf-soft); color:var(--lf);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h2v4h2v-4h2c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm-1 14h-1v-2.2c.62.13 1.28.2 2 .2s1.38-.07 2-.2V16h-1v-2.07c1.78-.34 3.2-1.74 3.73-3.53C17.06 7.6 14.77 5.09 12 5.09S6.94 7.6 6.27 10.4c.53 1.79 1.95 3.19 3.73 3.53V16z"/></svg>
+              </span>
+              <span style="font-weight:600; color:var(--ink);">Cadre naturel ombragé sous les arbres</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px; background:#FFF; border-radius:var(--r-sm); border:1px solid var(--border);">
+              <span class="contact-ico" style="background:rgba(232,111,28,0.12); color:var(--or);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 23c-4.97 0-9-3.58-9-8 0-4.08 3.05-7.74 6.32-11.45C10 2.8 11.2 1.5 12 0c.8 1.5 2 2.8 2.68 3.55C17.95 7.26 21 10.92 21 15c0 4.42-4.03 8-9 8zm0-13c-2.33 2.67-4 4.88-4 6.75 0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.87-1.67-4.08-4-6.75z"/></svg>
+              </span>
+              <span style="font-weight:600; color:var(--ink);">Spécialités braisées et sautées à la commande</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; padding:14px; background:#FFF; border-radius:var(--r-sm); border:1px solid var(--border);">
+              <span class="contact-ico" style="background:var(--gold-soft); color:var(--gold);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+              </span>
+              <span style="font-weight:600; color:var(--ink);">Plats authentiques de Côte d'Ivoire depuis Yamoussoukro</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <img src="assets/images/hero.jpg" alt="Ambiance Bolikro Chez Wolf, cadre naturel Yamoussoukro" style="border-radius:var(--r); box-shadow:var(--shadow-md); border:1px solid var(--border);">
+        </div>
+      </div>
+    </section>
+
+    <!-- SUIVI DE COMMANDE INTERACTIF -->
+    <section class="soft" id="suivi">
+      <div class="wrap" style="max-width:680px;">
+        <h2 style="font-size:clamp(30px,4vw,44px); text-align:center; margin-bottom:12px;">Suivre Ma Commande</h2>
+        <p style="text-align:center; color:var(--mu); margin-bottom:24px;">Entrez votre référence reçue lors de la commande pour connaître l'avancement de votre repas.</p>
+
+        <form id="tf" class="track-form">
+          <input id="num" placeholder="Ex: BCW-1A2B3" aria-label="Numéro de commande" autocomplete="off" style="font-weight:700; font-size:16px; letter-spacing:0.05em;">
+          <button class="btn dk" style="min-width:140px;">Suivre en direct</button>
+        </form>
+
+        <div id="res" aria-live="polite" style="margin-top:24px;"></div>
+      </div>
+    </section>
+
+    <!-- CONTACT & INFOS PRATIQUES -->
+    <section id="contact" style="background: var(--iv2); border-top: 1px solid var(--border);">
+      <div class="wrap">
+        <div style="text-align:center; max-width:660px; margin:0 auto 38px;">
+          <span style="color:var(--or); font-weight:700; text-transform:uppercase; font-size:12px; letter-spacing:0.12em; display:block; margin-bottom:8px;">Nous Retrouver</span>
+          <h2 style="font-size:clamp(32px,4vw,44px); margin-bottom:10px;">Coordonnées & Informations Pratiques</h2>
+          <p style="color:var(--mu); font-size:15px; margin:0;">Toutes les informations nécessaires pour nous rendre visite à Yamoussoukro, commander par téléphone ou échanger avec l'équipe.</p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Colonne 1 : Coordonnées Directes -->
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <a class="contact-card" href="https://maps.app.goo.gl/Gt6iu7Uzi5nmxgsb9" target="_blank" rel="noopener">
+              <span class="contact-ico" style="background:rgba(232,111,28,0.12); color:var(--or);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              </span>
+              <div style="flex:1;">
+                <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--mu); font-weight:700; display:block;">Notre Adresse</span>
+                <strong style="color:var(--ink); font-size:15.5px; display:block; margin-top:2px;">Yamoussoukro, Côte d'Ivoire</strong>
+                <span style="color:var(--or); font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">Ouvrir sur Google Maps →</span>
+              </div>
+            </a>
+
+            <a class="contact-card" href="tel:+2250709243380">
+              <span class="contact-ico" style="background:var(--lf-soft); color:var(--lf);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              </span>
+              <div style="flex:1;">
+                <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--mu); font-weight:700; display:block;">Commandes & WhatsApp</span>
+                <strong style="color:var(--ink); font-size:15.5px; display:block; margin-top:2px;">07 09 24 33 80</strong>
+                <span style="color:var(--mu); font-size:13px; display:block; margin-top:2px;">Ligne 2 : +225 07 47 47 38 58</span>
+              </div>
+            </a>
+
+            <a class="contact-card" href="mailto:bolikrochezwolf@gmail.com">
+              <span class="contact-ico" style="background:var(--gold-soft); color:var(--gold);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              </span>
+              <div style="flex:1;">
+                <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--mu); font-weight:700; display:block;">Courrier Électronique</span>
+                <strong style="color:var(--ink); font-size:15px; display:block; margin-top:2px; word-break:break-all;">bolikrochezwolf@gmail.com</strong>
+                <span style="color:var(--or); font-size:13px; font-weight:600; margin-top:2px; display:block;">Nous écrire un e-mail →</span>
+              </div>
+            </a>
+
+            <a class="contact-card" href="https://www.facebook.com/Bolikroyakrochezwolf/" target="_blank" rel="noopener">
+              <span class="contact-ico" style="background:rgba(24, 119, 242, 0.12); color:#1877F2;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </span>
+              <div style="flex:1;">
+                <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--mu); font-weight:700; display:block;">Page Facebook</span>
+                <strong style="color:var(--ink); font-size:15.5px; display:block; margin-top:2px;">Bolikro Chez WOLF</strong>
+                <span style="color:#1877F2; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">Visiter notre page officielle →</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Colonne 2 : Horaires & Moyens de Paiement -->
+          <div style="display:flex; flex-direction:column; gap:18px;">
+            <!-- Carte Horaires -->
+            <div class="contact-info-box">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span class="contact-ico" style="width:40px; height:40px; background:rgba(232,111,28,0.12); color:var(--or);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                  </span>
+                  <div>
+                    <h3 style="font-size:17.5px; margin:0; color:var(--ink);">Horaires d'Ouverture</h3>
+                    <small style="color:var(--mu); font-size:12.5px;">Sur place & livraisons</small>
+                  </div>
+                </div>
+                <span style="padding:4px 10px; background:var(--gold-soft); color:var(--ink); border-radius:999px; font-weight:700; font-size:12px;">7j / 7</span>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--iv); border-radius:var(--r-sm); border:1px solid var(--border);">
+                <div>
+                  <strong style="color:var(--ink); font-size:14.5px; display:block;">Lundi — Dimanche</strong>
+                  <span style="color:var(--mu); font-size:12.5px;">Service en continu midi & soir</span>
+                </div>
+                <span style="color:var(--lf); font-weight:800; font-size:14px;">Ouvert en continu</span>
+              </div>
+
+              <div style="padding:10px 14px; background:var(--lf-soft); border-radius:var(--r-sm); border-left:3px solid var(--lf); display:flex; align-items:center; gap:10px;">
+                <span style="width:9px; height:9px; border-radius:50%; background:var(--lf); display:inline-block; box-shadow:0 0 0 3px rgba(40,122,66,0.25);"></span>
+                <span style="color:var(--lf); font-weight:700; font-size:13px;">Actuellement Ouvert • Plats chauds à la braise</span>
+              </div>
+            </div>
+
+            <!-- Carte Moyens de Paiement -->
+            <div class="contact-info-box">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="contact-ico" style="width:40px; height:40px; background:var(--gold-soft); color:var(--gold);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                </span>
+                <div>
+                  <h3 style="font-size:17.5px; margin:0; color:var(--ink);">Moyens de Paiement Acceptés</h3>
+                  <small style="color:var(--mu); font-size:12.5px;">Règlement flexible à la commande</small>
+                </div>
+              </div>
+
+              <div class="pay-grid">
+                <div class="pay-item pay-cash">
+                  <img src="assets/images/argent_espece.jpg" alt="Billets de banque FCFA réels (Espèces)">
+                  <div>
+                    <span style="display:block; line-height:1.2;">Espèces (Cash)</span>
+                    <small style="font-size:11px; opacity:0.85; font-weight:500;">Billets & Pièces FCFA</small>
+                  </div>
+                </div>
+
+                <div class="pay-item pay-wave">
+                  <img src="assets/images/logo_wave.svg" alt="Logo officiel Wave">
+                  <div>
+                    <span style="display:block; line-height:1.2;">Wave</span>
+                    <small style="font-size:11px; opacity:0.85; font-weight:500;">Sans frais (0%)</small>
+                  </div>
+                </div>
+
+                <div class="pay-item pay-orange">
+                  <img src="assets/images/logo_orange.svg" alt="Logo officiel Orange Money">
+                  <div>
+                    <span style="display:block; line-height:1.2;">Orange Money</span>
+                    <small style="font-size:11px; opacity:0.85; font-weight:500;">Paiement instantané</small>
+                  </div>
+                </div>
+
+                <div class="pay-item pay-mtn">
+                  <img src="assets/images/logo_mtn.svg" alt="Logo officiel MTN MoMo">
+                  <div>
+                    <span style="display:block; line-height:1.2;">MTN MoMo</span>
+                    <small style="font-size:11px; opacity:0.85; font-weight:500;">MoMo Pay</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer>
+    <div class="wrap">
+      <div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <img src="assets/images/logo.png" alt="Logo Bolikro Chez Wolf" style="height:50px; width:auto;">
+        </div>
+        <p style="max-width:35ch; color:#D9C8BB; font-size:13.5px; line-height:1.7; margin-bottom:14px;">
+          Cuisine ivoirienne authentique préparée avec soin. Cadre naturel et chaleureux à Yamoussoukro.
+        </p>
+        <div style="display:flex; gap:12px;">
+          <a class="soc-btn" href="https://www.facebook.com/Bolikroyakrochezwolf/" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a class="soc-btn" href="tel:+2250709243380" aria-label="Téléphone">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          </a>
+          <a class="soc-btn" href="mailto:bolikrochezwolf@gmail.com" aria-label="Email">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 style="color:#FFF; margin-bottom:12px; font-size:16px;">Navigation</h4>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="#menu">Notre menu</a>
+          <a href="#etapes">Comment commander</a>
+          <a href="#apropos">Le restaurant</a>
+          <a href="#suivi">Suivi de commande</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 style="color:#FFF; margin-bottom:12px; font-size:16px;">Contact</h4>
+        <div style="display:flex; flex-direction:column; gap:8px; color:#D9C8BB; font-size:13.5px;">
+          <span style="display:inline-flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--or)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Yamoussoukro, Côte d'Ivoire
+          </span>
+          <a href="tel:+2250709243380" style="color:#E5A83B; display:inline-flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            07 09 24 33 80
+          </a>
+          <a href="tel:+2250747473858" style="color:#D9C8BB; display:inline-flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            07 47 47 38 58
+          </a>
+          <a href="mailto:bolikrochezwolf@gmail.com" style="color:#D9C8BB; display:inline-flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            bolikrochezwolf@gmail.com
+          </a>
+          <a href="admin.html" style="color:var(--gold); margin-top:8px; display:inline-flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            Espace Staff Cuisine
+          </a>
+        </div>
+        <span style="font-size:12px; color:#8A7869; display:block; margin-top:16px; line-height:1.6;">
+          © 2026 Bolikro Chez Wolf. Tous droits réservés.<br>
+          Restaurant · Yamoussoukro, Côte d'Ivoire.
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       DRAWER PANIER
+       ========================================================================= -->
+  <div id="ov"></div>
+  <aside id="drawer" aria-label="Panier">
+    <header>
+      <h2>Votre Panier</h2>
+      <button class="x" id="cl">Fermer</button>
+    </header>
+    <div id="lines"></div>
+    <footer>
+      <div class="tot">
+        <span>Sous-total</span>
+        <span id="sub">0 FCFA</span>
+      </div>
+      <button class="btn" id="go" style="width:100%;">Valider la commande</button>
+    </footer>
+  </aside>
+
+  <!-- =========================================================================
+       MODALE DE VALIDATION DE COMMANDE (3 ÉTAPES)
+       ========================================================================= -->
+  <dialog id="co">
+    <div class="dh">
+      <h2>Valider ma commande</h2>
+      <button id="cc" aria-label="Fermer">×</button>
+    </div>
+
+    <div class="db">
+      <!-- Barre d'avancement des étapes -->
+      <div class="prog">
+        <i id="p1" class="on"></i>
+        <i id="p2"></i>
+        <i id="p3"></i>
+      </div>
+
+      <!-- Étape 1 : Coordonnées -->
+      <div id="s1">
+        <label for="nom">Nom et Prénom *</label>
+        <input id="nom" autocomplete="name" placeholder="Ex: Jean-Marc Koffi">
+
+        <label for="tel">Téléphone (WhatsApp & Appels) *</label>
+        <input id="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="07 00 00 00 00">
+      </div>
+
+      <!-- Étape 2 : Mode de réception & Adresse -->
+      <div id="s2" hidden>
+        <label>Mode de réception</label>
+        <div class="opts">
+          <label>
+            <input type="radio" name="mode" value="livraison" checked> Livraison
+          </label>
+          <label>
+            <input type="radio" name="mode" value="retrait"> Retrait au restaurant
+          </label>
+        </div>
+
+        <div id="addr">
+          <label for="qua">Quartier / Commune *</label>
+          <input id="qua" placeholder="Ex: Cocody Angré, Marcory, Plateau...">
+
+          <label for="adr">Adresse précise & repère *</label>
+          <input id="adr" placeholder="Ex: Non loin de la pharmacie, portail noir">
+        </div>
+
+        <label for="nte">Instructions pour la cuisine (facultatif)</label>
+        <textarea id="nte" rows="2" placeholder="Ex: Piment bien relevé, découpe spécifique..."></textarea>
+      </div>
+
+      <!-- Étape 3 : Récapitulatif & Paiement -->
+      <div id="s3" hidden>
+        <div class="sum" id="recap"></div>
+
+        <label>Mode de règlement</label>
+        <div class="opts">
+          <label style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="pay" value="cash" checked>
+            <img src="assets/images/argent_espece.jpg" alt="Espèces" style="width:28px; height:28px; border-radius:6px; object-fit:cover; border:1px solid #C8E6C9;">
+            <span>Espèces (Payer à la réception)</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="pay" value="mobile">
+            <span style="display:inline-flex; gap:5px; align-items:center;">
+              <img src="assets/images/logo_wave.svg" alt="Wave" style="width:24px; height:24px; border-radius:6px;">
+              <img src="assets/images/logo_orange.svg" alt="Orange Money" style="width:24px; height:24px; border-radius:6px;">
+              <img src="assets/images/logo_mtn.svg" alt="MTN MoMo" style="width:24px; height:24px; border-radius:6px;">
+            </span>
+            <span>Mobile Money (Wave / Orange / MTN)</span>
+          </label>
+        </div>
+
+        <div class="note">
+          <strong>Note de paiement :</strong> En cas de paiement Mobile Money, le prestataire sécurisé valide la transaction avant remise du colis.
+        </div>
+      </div>
+
+      <p class="err" id="err" role="alert"></p>
+
+      <div class="da">
+        <button class="btn ln" id="back" style="color:var(--ink);">Retour</button>
+        <button class="btn" id="next">Continuer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Notification Toast -->
+  <div id="toast" role="status"></div>
+
+  <!-- Scripts -->
+  <script src="assets/js/core.js?v=8"></script>
+  <script src="assets/js/app.js?v=8"></script>
+  <script>
+    // Carrousel hero — défilement toutes les 5s
+    (function(){
+      const slides = document.querySelectorAll('.hero-slide');
+      if(!slides.length) return;
+      let i = 0;
+      setInterval(function(){
+        slides[i].classList.remove('active');
+        i = (i + 1) % slides.length;
+        slides[i].classList.add('active');
+      }, 5000);
+    })();
+  </script>
+</body>
+</html>
