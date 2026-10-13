@@ -99,7 +99,7 @@ const DEF = [
     c: 'Nos grillades',
     p: 30000,
     d: 'Gibier d\'hérisson entier préparé et grillé à la perfection aux épices de nos terroirs.',
-    img: 'assets/images/agouti.jpg',
+    img: 'assets/images/herisson.jpg',
     badge: 'Prestige Terroir',
     a: true
   },
@@ -109,7 +109,7 @@ const DEF = [
     c: 'Nos grillades',
     p: 30000,
     d: 'Hérisson entier sauté à la sauce tomate épicée aux aromates authentiques.',
-    img: 'assets/images/agouti.jpg',
+    img: 'assets/images/herisson.jpg',
     badge: 'Prestige Terroir',
     a: true
   },
@@ -213,7 +213,7 @@ const DEF = [
     c: 'Nos Kédjénous',
     p: 30000,
     d: 'Hérisson entier préparé en kédjénou traditionnel dans un pot d\'argile étanche, arômes intenses et chair fondante.',
-    img: 'assets/images/kedjenou.jpg',
+    img: 'assets/images/herisson.jpg',
     badge: 'Spécialité Rare',
     a: true
   },
@@ -225,7 +225,7 @@ const DEF = [
     c: 'Nos accompagnements',
     p: 300,
     d: 'Semoule de manioc fraîche, légère, aérée et savoureuse. L\'incontournable de la table ivoirienne.',
-    img: 'assets/images/alloco.jpg',
+    img: 'assets/images/attieke.jpg',
     badge: 'Tradition',
     a: true
   },
@@ -235,7 +235,7 @@ const DEF = [
     c: 'Nos accompagnements',
     p: 1000,
     d: 'Portion généreuse de riz blanc cuit à la vapeur, accompagnement idéal pour nos sauces et soupes.',
-    img: 'assets/images/alloco.jpg',
+    img: 'assets/images/riz.jpg',
     badge: 'Accompagnement',
     a: true
   },
@@ -255,7 +255,7 @@ const DEF = [
     c: 'Nos accompagnements',
     p: 2000,
     d: 'Frites croustillantes dorées et salées, servies bien chaudes.',
-    img: 'assets/images/alloco.jpg',
+    img: 'assets/images/frites.jpg',
     badge: 'Gourmand',
     a: true
   }

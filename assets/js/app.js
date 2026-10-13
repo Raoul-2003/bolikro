@@ -8,9 +8,11 @@ let cat = 'Tous';
 let step = 1;
 let mode = 'livraison';
 
-/* Synchronisation avec le menu stocké ou par défaut (22 plats) */
-if (!store.get('bcw_menu')) {
+/* Synchronisation avec le menu officiel avec les vraies images fidèles */
+const CURRENT_MENU_VERSION = 'v8-real-exact-dishes-images';
+if (store.get('bcw_menu_ver') !== CURRENT_MENU_VERSION) {
   store.set('bcw_menu', DEF);
+  store.set('bcw_menu_ver', CURRENT_MENU_VERSION);
 }
 
 const menu = () => store.get('bcw_menu', DEF);
